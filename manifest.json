@@ -15,7 +15,7 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/sidepanel.ts"],
+      "js": ["dist/sidepanel.js"],
       "matches": [
         "https://developer.chrome.com/docs/extensions/*",
         "https://developer.chrome.com/docs/webstore/*"
@@ -23,6 +23,6 @@
     }
   ],
   "background": {
-    "service_worker": "scripts/service-worker.js"
+    "service_worker": "dist/service-worker.js"
   }
 }

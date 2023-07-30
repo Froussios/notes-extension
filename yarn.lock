@@ -6,3 +6,8 @@ chrome-types@^0.1.219:
   version "0.1.219"
   resolved "https://registry.yarnpkg.com/chrome-types/-/chrome-types-0.1.219.tgz#45db334c0a9a21da99c6f89910ff2bccfe03a618"
   integrity sha512-mnrUC5moGDo/dsV1P4HTm/c2yomYTR2SaVzyStNcDhBjbDxDpMFHnud8KKRHIrk7lf0KY7/sERzUIB/vlGPWIw==
+
+typescript@^5.1.6:
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"
+  integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==

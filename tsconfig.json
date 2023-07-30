@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "types": ["./node_modules/chrome-types/_all.d.ts"],
+    "outDir": "./dist/",
+    "lib": ["ESNext", "DOM"]
+  },
+  "include": ["./scripts/**/*.ts"]
+}

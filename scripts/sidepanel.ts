@@ -10,4 +10,5 @@ chrome.runtime.onMessage.addListener(({ name, data }) => {
   if (name === "show-notes") {
     addItem("123");
   }
+  return true;
 });
