@@ -21,8 +21,5 @@
         "https://developer.chrome.com/docs/webstore/*"
       ]
     }
-  ],
-  "background": {
-    "service_worker": "dist/service-worker.js"
-  }
+  ]
 }
