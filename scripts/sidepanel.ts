@@ -1,3 +1,6 @@
+import { LitElement } from "lit-element";
+import { customElement } from "lit-element/decorators";
+
 function SetContext(urls: string[]) {
   if (urls.length === 0) return; // TODO clear?
   if (urls.length > 1) console.warn("Multiple contexts", urls);
@@ -12,3 +15,6 @@ function Querycontext() {
 
 Querycontext();
 setInterval(Querycontext, 2000);
+
+customElement("test-test");
+class Test extends LitElement {}
