@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "tsc && yarn parcel build build/sidepanel.js",
+    "clear": "rm -rf build/ dist/"
+  },
   "dependencies": {
     "lit": "^2.7.6"
   },

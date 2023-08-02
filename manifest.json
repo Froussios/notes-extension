@@ -11,7 +11,7 @@
   //   },
   "permissions": ["sidePanel", "tabs"],
   "side_panel": {
-    "default_path": "dist/sidepanel.html"
+    "default_path": "sidepanel.html"
   },
   "content_scripts": [
     {
