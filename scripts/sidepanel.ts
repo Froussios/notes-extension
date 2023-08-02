@@ -1,5 +1,5 @@
-import { LitElement } from "lit-element";
-import { customElement } from "lit-element/decorators";
+import { LitElement } from "lit";
+import { customElement } from "lit/decorators";
 
 function SetContext(urls: string[]) {
   if (urls.length === 0) return; // TODO clear?
