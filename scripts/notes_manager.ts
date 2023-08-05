@@ -13,6 +13,35 @@ export function QueryContext(): Promise<chrome.tabs.Tab[]> {
   });
 }
 
+function calculateSimilarityScore(url1: string, url2: string): number {
+  const parsedUrl1 = new URL(url1);
+  const parsedUrl2 = new URL(url2);
+
+  // Calculate score for same host and path
+  if (
+    parsedUrl1.host === parsedUrl2.host &&
+    parsedUrl1.pathname === parsedUrl2.pathname
+  ) {
+    return 3;
+  }
+
+  // Calculate score for same host and partial path match
+  if (
+    parsedUrl1.host === parsedUrl2.host &&
+    parsedUrl1.pathname.includes(parsedUrl2.pathname)
+  ) {
+    return 2;
+  }
+
+  // Calculate score for same host
+  if (parsedUrl1.host === parsedUrl2.host) {
+    return 1;
+  }
+
+  // Calculate score for everything else
+  return 0;
+}
+
 @customElement("note-manager")
 export class NoteManager extends LitElement {
   @property({ type: String }) currentUrl: string | null = null;
@@ -48,6 +77,14 @@ export class NoteManager extends LitElement {
   private async refreshContext() {
     const tabs = await QueryContext();
     this.currentUrl = tabs.filter((tab) => !!tab.url)[0].url!;
+
+    // TODO only when context changes
+    this.notes.sort(
+      (n1, n2) =>
+        calculateSimilarityScore(n2.url, this.currentUrl || "") -
+        calculateSimilarityScore(n1.url, this.currentUrl || "")
+    );
+    this.requestUpdate();
   }
 
   firstUpdated() {
