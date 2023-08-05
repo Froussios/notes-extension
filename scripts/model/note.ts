@@ -14,7 +14,10 @@ export class Note {
   }
 
   private validate() {
-    if (!this.id) throw new Error("Required data is missing.");
+    if (!this.id) {
+      throw new Error("Required data is missing.");
+    }
+    return true;
   }
 
   // Save the note to localStorage
@@ -32,7 +35,7 @@ export class Note {
       notes.push(this);
     }
 
-    localStorage.setItem("notes", JSON.stringify(notes));
+    Note.persistAllNotes(notes);
   }
 
   // Delete the note from localStorage
@@ -42,13 +45,29 @@ export class Note {
 
     if (index !== -1) {
       notes.splice(index, 1);
-      localStorage.setItem("notes", JSON.stringify(notes));
+      Note.persistAllNotes(notes);
     }
   }
 
   // Static method to fetch all notes from localStorage
   static getAllNotes(): Note[] {
     const notesStr = localStorage.getItem("notes");
-    return notesStr ? JSON.parse(notesStr) : [];
+    const notesObj = notesStr ? JSON.parse(notesStr) : [];
+    const notes = notesObj.map(
+      (n: any) => new Note(n.id, n.title, n.content, n.url)
+    );
+
+    console.assert(Array.isArray(notes));
+    console.assert(notes.every((n: Note) => n.validate()));
+    if (!notes.every((n: Note) => !!n.url)) {
+      console.warn("Loaded note without url", notes);
+    }
+
+    return notes;
+  }
+
+  static persistAllNotes(notes: Note[]) {
+    const str = JSON.stringify(notes);
+    localStorage.setItem("notes", str);
   }
 }

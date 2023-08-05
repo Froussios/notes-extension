@@ -10,20 +10,25 @@ export class NoteElement extends LitElement {
   @property({ type: String }) context: string | null = null;
 
   static styles = css`
-    /* Add your custom styles here */
+    :host {
+      display: inline-block;
+      border: 1px solid gray;
+      width: 200px;
+    }
   `;
 
   constructor() {
     super();
     // If note prop is not set, create a new note
-    if (!this.note) {
+    if (!this.note && this.context) {
       this.note = new Note(
         this.generateRandomId(),
         "New Note",
         "",
-        this.context || "" // TODO Should this be an error?
+        this.context
       );
       this.isNewNote = true;
+      this.isDirty = true;
     }
   }
 
@@ -67,6 +72,8 @@ export class NoteElement extends LitElement {
   }
 
   render() {
+    if (!this.note) return html`<i>No note</i>`;
+
     return html`
       <div>
         <h3>${this.note?.url}</h3>

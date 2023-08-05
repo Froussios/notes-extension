@@ -26,11 +26,7 @@ export class NoteManager extends LitElement {
   constructor() {
     super();
     // Load existing notes from localStorage
-    const notesFromStorage = Note.getAllNotes();
-    this.notes = notesFromStorage.map(
-      (noteData: any) =>
-        new Note(noteData.id, noteData.title, noteData.content, noteData.url)
-    );
+    this.notes = Note.getAllNotes();
   }
 
   private createNote() {
@@ -41,26 +37,7 @@ export class NoteManager extends LitElement {
       this.currentUrl || "Invalid"
     );
     this.notes.push(newNote);
-    this.saveNotesToStorage();
     this.requestUpdate();
-  }
-
-  private deleteNote(note: Note) {
-    const index = this.notes.indexOf(note);
-    if (index !== -1) {
-      this.notes.splice(index, 1);
-      this.saveNotesToStorage();
-      this.requestUpdate();
-    }
-  }
-
-  private saveNotesToStorage() {
-    const notesData = this.notes.map((note) => ({
-      id: note.id,
-      title: note.title,
-      content: note.content,
-    }));
-    localStorage.setItem("notes", JSON.stringify(notesData));
   }
 
   private generateRandomId(): string {
