@@ -2,8 +2,7 @@ import { LitElement, PropertyValueMap, html } from "lit";
 import { customElement, state, property } from "lit/decorators";
 
 /**
- *
- * @returns the active tabs.
+ @returns the active tabs.
  */
 export function QueryContext(): Promise<chrome.tabs.Tab[]> {
   return new Promise((resolve, reject) => {
@@ -18,7 +17,7 @@ export class Context extends LitElement {
   @property() url = "Loading";
 
   render() {
-    return html`<h2>${this.url}</h2>`;
+    return html`<h2>DELETE ME</h2>`;
   }
 
   /** Show the active tab url. */

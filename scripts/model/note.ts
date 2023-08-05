@@ -2,11 +2,13 @@ export class Note {
   id: string;
   title: string;
   content: string;
+  url: string;
 
-  constructor(id: string, title: string, content: string) {
+  constructor(id: string, title: string, content: string, url: string) {
     this.id = id;
     this.title = title;
     this.content = content;
+    this.url = url;
   }
 
   // Save the note to localStorage

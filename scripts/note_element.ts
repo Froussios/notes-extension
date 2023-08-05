@@ -6,6 +6,7 @@ import { Note } from "./model/note";
 export class NoteElement extends LitElement {
   @property({ type: Object }) note: Note | null = null;
   @property({ type: Boolean }) isNewNote = false;
+  @property({ type: String }) context: string | null = null;
 
   static styles = css`
     /* Add your custom styles here */
@@ -15,7 +16,12 @@ export class NoteElement extends LitElement {
     super();
     // If note prop is not set, create a new note
     if (!this.note) {
-      this.note = new Note(this.generateRandomId(), "New Note", "");
+      this.note = new Note(
+        this.generateRandomId(),
+        "New Note",
+        "",
+        this.context || "" // TODO Should this be an error?
+      );
       this.isNewNote = true;
     }
   }
@@ -58,6 +64,7 @@ export class NoteElement extends LitElement {
   render() {
     return html`
       <div>
+        <h3>${this.note?.url}</h3>
         <input
           type="text"
           .value="${this.note?.title || ""}"
