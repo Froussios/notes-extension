@@ -6,6 +6,7 @@ import { Note } from "./model/note";
 export class NoteElement extends LitElement {
   @property({ type: Object }) note: Note | null = null;
   @property({ type: Boolean }) isNewNote = false;
+  @property({ type: Boolean }) isDirty = false;
   @property({ type: String }) context: string | null = null;
 
   static styles = css`
@@ -31,6 +32,7 @@ export class NoteElement extends LitElement {
     if (this.note) {
       this.note.title = target.value;
     }
+    this.isDirty = true;
     this.requestUpdate();
   }
 
@@ -39,6 +41,7 @@ export class NoteElement extends LitElement {
     if (this.note) {
       this.note.content = target.value;
     }
+    this.isDirty = true;
     this.requestUpdate();
   }
 
@@ -46,6 +49,7 @@ export class NoteElement extends LitElement {
     if (this.note) {
       this.note.save();
       this.isNewNote = false;
+      this.isDirty = false;
     }
   }
 
@@ -53,6 +57,7 @@ export class NoteElement extends LitElement {
     if (this.note) {
       this.note.delete();
       this.isNewNote = true;
+      this.isDirty = true;
     }
   }
 
@@ -76,10 +81,12 @@ export class NoteElement extends LitElement {
           .value="${this.note?.content || ""}"
           placeholder="Content"
         ></textarea>
-        <button @click="${this.saveNote}">Save</button>
-        ${!this.isNewNote
-          ? html`<button @click="${this.deleteNote}">Delete</button>`
-          : ""}
+        <button @click="${this.saveNote}" ?disabled=${!this.isDirty}>
+          Save
+        </button>
+        <button @click="${this.deleteNote}" ?disabled=${this.isNewNote}>
+          Delete
+        </button>
       </div>
     `;
   }
