@@ -6,13 +6,21 @@ export class Note {
 
   constructor(id: string, title: string, content: string, url: string) {
     this.id = id;
-    this.title = title;
-    this.content = content;
-    this.url = url;
+    this.title = title || "";
+    this.content = content || "";
+    this.url = url || "";
+
+    this.validate();
+  }
+
+  private validate() {
+    if (!this.id) throw new Error("Required data is missing.");
   }
 
   // Save the note to localStorage
   save() {
+    this.validate();
+
     const notes = Note.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
