@@ -18,6 +18,13 @@ export class NoteManager extends LitElement {
 
   private notes: Note[] = [];
 
+  private get hostNotes(): Note[] {
+    return this.notes.filter((note) => this.prioritiseNote(note) > 1);
+  }
+  private get otherNotes(): Note[] {
+    return this.notes.filter((note) => this.prioritiseNote(note) <= 1);
+  }
+
   constructor() {
     super();
     // Load existing notes from localStorage
@@ -62,6 +69,11 @@ export class NoteManager extends LitElement {
     });
   }
 
+  prioritiseNote(note: Note | null | undefined) {
+    if (!this.currentUrl || !note || !note.url) return 0;
+    return calculateSimilarityScore(this.currentUrl, note.url);
+  }
+
   render() {
     return html`
       <sp-theme scale="medium" color="light" theme="spectrum">
@@ -70,7 +82,20 @@ export class NoteManager extends LitElement {
           <div>for ${this.currentUrl}</div>
         </span>
         <sp-divider size="l"></sp-divider>
-        ${this.notes.map(
+        ${this.hostNotes.map(
+          (note) =>
+            html`
+              <note-element
+                .note="${note}"
+                .isNewNote=${false}
+                .context=${this.currentUrl}
+              ></note-element>
+              <sp-divider size="m"></sp-divider>
+            `
+        )}
+        <h3>Everything else</h3>
+        <sp-divider size="l"></sp-divider>
+        ${this.otherNotes.map(
           (note) =>
             html`
               <note-element
