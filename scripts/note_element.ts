@@ -17,6 +17,30 @@ export class NoteElement extends LitElement {
   @property({ type: Boolean }) isNewNote = false;
   @property({ type: Boolean }) isDirty = false;
   @property({ type: String }) context: string | null = null;
+  @property({ type: String, reflect: true, attribute: "scope" }) scope:
+    | "exact"
+    | "host"
+    | "other" = "other";
+
+  updateScope() {
+    if (!this.context || !this.note) {
+      this.scope = "other";
+      return;
+    }
+
+    switch (calculateSimilarityScore(this.context, this.note.url)) {
+      case 3:
+        this.scope = "exact";
+        break;
+      case 2:
+      case 1:
+        this.scope = "host";
+        break;
+      default:
+        this.scope = "other";
+        break;
+    }
+  }
 
   constructor() {
     super();
@@ -72,6 +96,10 @@ export class NoteElement extends LitElement {
     return Math.random().toString(36).substr(2, 9);
   }
 
+  updated() {
+    this.updateScope();
+  }
+
   render() {
     if (!this.note) return html`<i>No note</i>`;
 
@@ -114,13 +142,10 @@ export class NoteElement extends LitElement {
   }
 
   renderUrlIcon() {
-    if (!this.context || !this.note)
-      return html`<sp-icon-globe-clock></sp-icon-globe-clock>`;
-    switch (calculateSimilarityScore(this.context, this.note.url)) {
-      case 3:
+    switch (this.scope) {
+      case "exact":
         return html`<sp-icon-globe></sp-icon-globe>`;
-      case 2:
-      case 1:
+      case "host":
         return html`<sp-icon-building></sp-icon-building>`;
       default:
         return html``;
@@ -130,6 +155,13 @@ export class NoteElement extends LitElement {
   static styles = css`
     :host {
       display: inline-block;
+      padding: 4px;
+    }
+
+    :host([scope="exact"]),
+    :host([scope="host"]) {
+      background-color: var(--spectrum-blue-100);
+      box-shadow: 1px 1px 5px var(--spectrum-blue-300);
     }
 
     div.url {

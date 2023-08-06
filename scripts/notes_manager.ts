@@ -19,10 +19,10 @@ export class NoteManager extends LitElement {
   private notes: Note[] = [];
 
   private get hostNotes(): Note[] {
-    return this.notes.filter((note) => this.prioritiseNote(note) > 1);
+    return this.notes.filter((note) => this.prioritiseNote(note) >= 1);
   }
   private get otherNotes(): Note[] {
-    return this.notes.filter((note) => this.prioritiseNote(note) <= 1);
+    return this.notes.filter((note) => this.prioritiseNote(note) <= 0);
   }
 
   constructor() {
