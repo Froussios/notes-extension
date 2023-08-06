@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
+import "@spectrum-web-components/divider/sp-divider.js";
 
 /**
  @returns the active tabs.
@@ -93,20 +94,37 @@ export class NoteManager extends LitElement {
 
   render() {
     return html`
-      <button @click="${this.createNote}">Create Note</button>
-      <h2>${this.currentUrl}</h2>
-      ${this.notes.map(
-        (note) =>
-          html`
-            <note-element
-              .note="${note}"
-              .isNewNote=${false}
-              .context=${this.currentUrl}
-            ></note-element>
-          `
-      )}
+      <sp-theme scale="medium" color="light" theme="spectrum">
+        <button @click="${this.createNote}">Create Note</button>
+        <h2>${this.currentUrl}</h2>
+        ${this.notes.map(
+          (note) =>
+            html`
+              <note-element
+                .note="${note}"
+                .isNewNote=${false}
+                .context=${this.currentUrl}
+              ></note-element>
+              <sp-divider size="m"></sp-divider>
+            `
+        )}
+      </sp-theme>
     `;
   }
 
-  static styles = css``;
+  static styles = css`
+    :host {
+      display: inline-block;
+      width: 100%;
+    }
+
+    note-element {
+      width: 100%;
+    }
+
+    sp-divider {
+      margin: 4px 0;
+      width: 100%;
+    }
+  `;
 }

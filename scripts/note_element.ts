@@ -1,6 +1,10 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
+import "@spectrum-web-components/textfield/sp-textfield.js";
+import "@spectrum-web-components/divider/sp-divider.js";
+import "@spectrum-web-components/theme/sp-theme.js";
+import "@spectrum-web-components/theme/src/themes.js";
 
 @customElement("note-element")
 export class NoteElement extends LitElement {
@@ -67,34 +71,33 @@ export class NoteElement extends LitElement {
     if (!this.note) return html`<i>No note</i>`;
 
     return html`
-      <div>
+      <sp-theme scale="medium" color="light" theme="spectrum">
         <h3>${this.note?.url}</h3>
-        <input
-          type="text"
-          .value="${this.note?.title || ""}"
+        <sp-textfield
           @input="${this.updateNoteTitle}"
-          placeholder="Title"
-        />
-        <textarea
-          @input="${this.updateNoteContent}"
+          .value="${this.note?.title || ""}"
+          placeholder="New note"
+          quiet
+        ></sp-textfield>
+        <sp-textfield
+          @input=${this.updateNoteContent}
           .value="${this.note?.content || ""}"
-          placeholder="Content"
-        ></textarea>
+          multiline
+          placeholder="Empty"
+        ></sp-textfield>
         <button @click="${this.saveNote}" ?disabled=${!this.isDirty}>
           Save
         </button>
         <button @click="${this.deleteNote}" ?disabled=${this.isNewNote}>
           Delete
         </button>
-      </div>
+      </sp-theme>
     `;
   }
 
   static styles = css`
     :host {
       display: inline-block;
-      border: 1px solid gray;
-      width: 200px;
     }
   `;
 }
