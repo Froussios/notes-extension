@@ -72,13 +72,13 @@ export class NoteElement extends LitElement {
 
     return html`
       <sp-theme scale="medium" color="light" theme="spectrum">
-        <h3>${this.note?.url}</h3>
         <sp-textfield
           @input="${this.updateNoteTitle}"
           .value="${this.note?.title || ""}"
           placeholder="New note"
           quiet
         ></sp-textfield>
+        <div class="url">${this.note?.url}</div>
         <sp-textfield
           @input=${this.updateNoteContent}
           .value="${this.note?.content || ""}"
@@ -98,6 +98,12 @@ export class NoteElement extends LitElement {
   static styles = css`
     :host {
       display: inline-block;
+    }
+
+    div.url {
+      overflow: hidden;
+      font-weight: lighter;
+      color: gray;
     }
   `;
 }
