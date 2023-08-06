@@ -9,14 +9,6 @@ export class NoteElement extends LitElement {
   @property({ type: Boolean }) isDirty = false;
   @property({ type: String }) context: string | null = null;
 
-  static styles = css`
-    :host {
-      display: inline-block;
-      border: 1px solid gray;
-      width: 200px;
-    }
-  `;
-
   constructor() {
     super();
     // If note prop is not set, create a new note
@@ -97,4 +89,12 @@ export class NoteElement extends LitElement {
       </div>
     `;
   }
+
+  static styles = css`
+    :host {
+      display: inline-block;
+      border: 1px solid gray;
+      width: 200px;
+    }
+  `;
 }

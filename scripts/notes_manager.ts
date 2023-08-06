@@ -46,10 +46,6 @@ function calculateSimilarityScore(url1: string, url2: string): number {
 export class NoteManager extends LitElement {
   @property({ type: String }) currentUrl: string | null = null;
 
-  static styles = css`
-    /* Add your custom styles here */
-  `;
-
   private notes: Note[] = [];
 
   constructor() {
@@ -111,4 +107,6 @@ export class NoteManager extends LitElement {
       )}
     `;
   }
+
+  static styles = css``;
 }
