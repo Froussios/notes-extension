@@ -4,15 +4,11 @@ import { Note } from "./model/note";
 import "@spectrum-web-components/divider/sp-divider.js";
 import { calculateSimilarityScore } from "./util";
 
-/**
- @returns the active tabs.
- */
-export function QueryContext(): Promise<chrome.tabs.Tab[]> {
-  return new Promise((resolve, reject) => {
-    chrome.tabs.query({ active: true }, (result: chrome.tabs.Tab[]) => {
-      resolve(result);
-    });
-  });
+async function getCurrentTab(): Promise<chrome.tabs.Tab> {
+  let queryOptions = { active: true, lastFocusedWindow: true };
+  // `tab` will either be a `tabs.Tab` instance or `undefined`.
+  let [tab] = await chrome.tabs.query(queryOptions);
+  return tab;
 }
 
 @customElement("note-manager")
@@ -44,10 +40,11 @@ export class NoteManager extends LitElement {
 
   /** Show the active tab url. */
   private async refreshContext() {
-    const tabs = await QueryContext();
-    this.currentUrl = tabs.filter((tab) => !!tab.url)[0].url!;
+    const tab = await getCurrentTab();
+    if (!tab.url) return;
+    if (this.currentUrl === tab.url) return;
 
-    // TODO only when context changes
+    this.currentUrl = tab.url;
     this.notes.sort(
       (n1, n2) =>
         calculateSimilarityScore(n2.url, this.currentUrl || "") -
@@ -59,9 +56,9 @@ export class NoteManager extends LitElement {
   firstUpdated() {
     this.refreshContext();
 
-    setInterval(() => {
+    chrome.tabs.onActivated.addListener(() => {
       this.refreshContext();
-    }, 2000);
+    });
   }
 
   render() {
