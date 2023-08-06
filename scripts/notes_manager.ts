@@ -64,8 +64,12 @@ export class NoteManager extends LitElement {
   render() {
     return html`
       <sp-theme scale="medium" color="light" theme="spectrum">
-        <button @click="${this.createNote}">Create Note</button>
-        <h2>${this.currentUrl}</h2>
+        <span>
+          <button @click="${this.createNote}">Create Note</button>
+          for
+          <span class="url">${this.currentUrl}</span>
+        </span>
+        <sp-divider size="l"></sp-divider>
         ${this.notes.map(
           (note) =>
             html`
@@ -92,7 +96,7 @@ export class NoteManager extends LitElement {
     }
 
     sp-divider {
-      margin: 4px 0;
+      margin: 4px 0 10px 0;
       width: 100%;
     }
   `;
