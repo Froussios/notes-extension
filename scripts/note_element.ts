@@ -1,10 +1,14 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
+import { calculateSimilarityScore } from "./util";
 import "@spectrum-web-components/textfield/sp-textfield.js";
 import "@spectrum-web-components/divider/sp-divider.js";
 import "@spectrum-web-components/theme/sp-theme.js";
 import "@spectrum-web-components/theme/src/themes.js";
+import "@spectrum-web-components/icons-workflow/icons/sp-icon-globe.js";
+import "@spectrum-web-components/icons-workflow/icons/sp-icon-globe-clock.js";
+import "@spectrum-web-components/icons-workflow/icons/sp-icon-building.js";
 
 @customElement("note-element")
 export class NoteElement extends LitElement {
@@ -78,6 +82,7 @@ export class NoteElement extends LitElement {
           placeholder="New note"
           quiet
         ></sp-textfield>
+        ${this.renderUrlIcon()}
         <div class="url">${this.note?.url}</div>
         <sp-textfield
           @input=${this.updateNoteContent}
@@ -85,14 +90,30 @@ export class NoteElement extends LitElement {
           multiline
           placeholder="Empty"
         ></sp-textfield>
-        <button @click="${this.saveNote}" ?disabled=${!this.isDirty}>
-          Save
-        </button>
-        <button @click="${this.deleteNote}" ?disabled=${this.isNewNote}>
-          Delete
-        </button>
+        <div>
+          <button @click="${this.saveNote}" ?disabled=${!this.isDirty}>
+            Save
+          </button>
+          <button @click="${this.deleteNote}" ?disabled=${this.isNewNote}>
+            Delete
+          </button>
+        </div>
       </sp-theme>
     `;
+  }
+
+  renderUrlIcon() {
+    if (!this.context || !this.note)
+      return html`<sp-icon-globe-clock></sp-icon-globe-clock>`;
+    switch (calculateSimilarityScore(this.context, this.note.url)) {
+      case 3:
+        return html`<sp-icon-globe></sp-icon-globe>`;
+      case 2:
+      case 1:
+        return html`<sp-icon-building></sp-icon-building>`;
+      default:
+        return html``;
+    }
   }
 
   static styles = css`

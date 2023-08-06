@@ -2,6 +2,7 @@ import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
 import "@spectrum-web-components/divider/sp-divider.js";
+import { calculateSimilarityScore } from "./util";
 
 /**
  @returns the active tabs.
@@ -12,35 +13,6 @@ export function QueryContext(): Promise<chrome.tabs.Tab[]> {
       resolve(result);
     });
   });
-}
-
-function calculateSimilarityScore(url1: string, url2: string): number {
-  const parsedUrl1 = new URL(url1);
-  const parsedUrl2 = new URL(url2);
-
-  // Calculate score for same host and path
-  if (
-    parsedUrl1.host === parsedUrl2.host &&
-    parsedUrl1.pathname === parsedUrl2.pathname
-  ) {
-    return 3;
-  }
-
-  // Calculate score for same host and partial path match
-  if (
-    parsedUrl1.host === parsedUrl2.host &&
-    parsedUrl1.pathname.includes(parsedUrl2.pathname)
-  ) {
-    return 2;
-  }
-
-  // Calculate score for same host
-  if (parsedUrl1.host === parsedUrl2.host) {
-    return 1;
-  }
-
-  // Calculate score for everything else
-  return 0;
 }
 
 @customElement("note-manager")
