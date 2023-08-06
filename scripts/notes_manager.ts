@@ -31,7 +31,7 @@ export class NoteManager extends LitElement {
       "",
       this.currentUrl || "Invalid"
     );
-    this.notes.push(newNote);
+    this.notes.unshift(newNote);
     this.requestUpdate();
   }
 
