@@ -64,9 +64,8 @@ export class NoteManager extends LitElement {
   firstUpdated() {
     this.refreshContext();
 
-    chrome.tabs.onActivated.addListener(() => {
-      this.refreshContext();
-    });
+    chrome.tabs.onActivated.addListener(() => this.refreshContext());
+    chrome.tabs.onUpdated.addListener(() => this.refreshContext());
   }
 
   prioritiseNote(note: Note | null | undefined) {
@@ -83,8 +82,8 @@ export class NoteManager extends LitElement {
         </span>
         <sp-divider size="l"></sp-divider>
         ${this.hostNotes.map(
-          (note) =>
-            html`
+      (note) =>
+        html`
               <note-element
                 .note="${note}"
                 .isNewNote=${false}
@@ -92,12 +91,12 @@ export class NoteManager extends LitElement {
               ></note-element>
               <sp-divider size="m"></sp-divider>
             `
-        )}
+    )}
         <h3>Everything else</h3>
         <sp-divider size="l"></sp-divider>
         ${this.otherNotes.map(
-          (note) =>
-            html`
+      (note) =>
+        html`
               <note-element
                 .note="${note}"
                 .isNewNote=${false}
@@ -105,7 +104,7 @@ export class NoteManager extends LitElement {
               ></note-element>
               <sp-divider size="m"></sp-divider>
             `
-        )}
+    )}
       </sp-theme>
     `;
   }
