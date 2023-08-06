@@ -9,6 +9,7 @@ import "@spectrum-web-components/theme/src/themes.js";
 import "@spectrum-web-components/icons-workflow/icons/sp-icon-globe.js";
 import "@spectrum-web-components/icons-workflow/icons/sp-icon-globe-clock.js";
 import "@spectrum-web-components/icons-workflow/icons/sp-icon-building.js";
+import "@spectrum-web-components/button/sp-button.js";
 
 @customElement("note-element")
 export class NoteElement extends LitElement {
@@ -91,12 +92,22 @@ export class NoteElement extends LitElement {
           placeholder="Empty"
         ></sp-textfield>
         <div>
-          <button @click="${this.saveNote}" ?disabled=${!this.isDirty}>
+          <sp-button
+            variant="secondary"
+            size="s"
+            @click="${this.saveNote}"
+            ?disabled=${!this.isDirty}
+          >
             Save
-          </button>
-          <button @click="${this.deleteNote}" ?disabled=${this.isNewNote}>
+          </sp-button>
+          <sp-button
+            variant="secondary"
+            size="s"
+            @click="${this.deleteNote}"
+            ?disabled=${this.isNewNote}
+          >
             Delete
-          </button>
+          </sp-button>
         </div>
       </sp-theme>
     `;

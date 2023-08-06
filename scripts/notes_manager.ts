@@ -2,6 +2,7 @@ import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
 import "@spectrum-web-components/divider/sp-divider.js";
+import "@spectrum-web-components/button/sp-button.js";
 import { calculateSimilarityScore } from "./util";
 
 async function getCurrentTab(): Promise<chrome.tabs.Tab> {
@@ -65,9 +66,8 @@ export class NoteManager extends LitElement {
     return html`
       <sp-theme scale="medium" color="light" theme="spectrum">
         <span>
-          <button @click="${this.createNote}">Create Note</button>
-          for
-          <span class="url">${this.currentUrl}</span>
+          <sp-button @click="${this.createNote}">Create Note</sp-button>
+          <div>for ${this.currentUrl}</div>
         </span>
         <sp-divider size="l"></sp-divider>
         ${this.notes.map(

@@ -781,6 +781,32 @@
   dependencies:
     lit "^2.5.0"
 
+"@spectrum-web-components/button@^0.35.0":
+  version "0.35.0"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/button/-/button-0.35.0.tgz#c9f63f660f4000228aea70ffbd863c88a86bf74a"
+  integrity sha512-ZqylXjRFPKNgcDXCa7MA7TGwzJN5IXbsai9ZZU/AQ/QEZ1jT/JuOxVYjca35gplgXp2dUBTOPVptMPNULNoTMA==
+  dependencies:
+    "@spectrum-web-components/base" "^0.35.0"
+    "@spectrum-web-components/clear-button" "^0.35.0"
+    "@spectrum-web-components/close-button" "^0.35.0"
+    "@spectrum-web-components/icon" "^0.35.0"
+    "@spectrum-web-components/icons-ui" "^0.35.0"
+    "@spectrum-web-components/shared" "^0.35.0"
+
+"@spectrum-web-components/clear-button@^0.35.0":
+  version "0.35.0"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/clear-button/-/clear-button-0.35.0.tgz#005ef9f30a126d8f96dd891aee66359d91dffb4f"
+  integrity sha512-Xsyt4HizrZbxVdv1M7l3zzQMF+howIO6CKn6r3Z05r7X68KzgoyF5U6lymuNigTAF280YEmLzX12U0txcqkiEw==
+  dependencies:
+    "@spectrum-web-components/base" "^0.35.0"
+
+"@spectrum-web-components/close-button@^0.35.0":
+  version "0.35.0"
+  resolved "https://registry.yarnpkg.com/@spectrum-web-components/close-button/-/close-button-0.35.0.tgz#09db00a9bd5fdb34f839e2ee15ed36bf92351ad0"
+  integrity sha512-wtrOwBJh5Zp6/njaec4o2Y3JvmdCGMEpMK/hpt6TMTDJ0Y/wYQuzO5Tb4kokCF8aa/nRGcJ0tjNkn4Gl3SQDog==
+  dependencies:
+    "@spectrum-web-components/base" "^0.35.0"
+
 "@spectrum-web-components/divider@^0.35.0":
   version "0.35.0"
   resolved "https://registry.yarnpkg.com/@spectrum-web-components/divider/-/divider-0.35.0.tgz#47c02c9eb19b0b33675a5ad88b2d9b2fb8cfbf0b"
