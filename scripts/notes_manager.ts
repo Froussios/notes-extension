@@ -92,8 +92,10 @@ export class NoteManager extends LitElement {
               <sp-divider size="m"></sp-divider>
             `
     )}
-        <h3>Everything else</h3>
-        <sp-divider size="l"></sp-divider>
+        <div id="everything-else">
+          <h3>Everything else</h3>
+          <sp-divider size="l"></sp-divider>
+        </div>
         ${this.otherNotes.map(
       (note) =>
         html`
@@ -119,8 +121,19 @@ export class NoteManager extends LitElement {
       width: 100%;
     }
 
-    sp-divider {
-      margin: 4px 0 10px 0;
+    #everything-else {
+      background-color: var(--spectrum-gray-300);
+      border-top-left-radius: 4px;
+      border-top-right-radius: 24px 4px;
+      padding-top: 12px;
+    }
+    #everything-else h3 {
+      margin-left: 8px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    #everything-else sp-divider {
+      margin: 0 0 10px 0;
       width: 100%;
     }
   `;

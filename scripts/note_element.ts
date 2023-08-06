@@ -147,6 +147,7 @@ export class NoteElement extends LitElement {
         return html`<sp-icon-globe></sp-icon-globe>`;
       case "host":
         return html`<sp-icon-building></sp-icon-building>`;
+      case "other":
       default:
         return html``;
     }
@@ -155,13 +156,20 @@ export class NoteElement extends LitElement {
   static styles = css`
     :host {
       display: inline-block;
-      padding: 4px;
+      padding: 10px;
+      color: #333;
     }
 
     :host([scope="exact"]),
     :host([scope="host"]) {
-      background-color: var(--spectrum-blue-100);
-      box-shadow: 1px 1px 5px var(--spectrum-blue-300);
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      background-color: var(--spectrum-yellow-100);
+      border: 1px solid var(--spectrum-yellow-200);
+    }
+
+    :host([scope="other"]) {
+      background-color: var(--spectrum-gray-200);
+      border: 1px solid var(--spectrum-gray-300);
     }
 
     div.url {
