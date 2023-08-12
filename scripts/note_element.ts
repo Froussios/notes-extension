@@ -5,6 +5,7 @@ import { calculateSimilarityScore } from "./util";
 import "@material/web/button/text-button";
 import "@material/web/icon/icon";
 import "@material/web/textfield/outlined-text-field";
+import "@material/web/textfield/filled-text-field";
 
 @customElement("note-element")
 export class NoteElement extends LitElement {
@@ -99,17 +100,17 @@ export class NoteElement extends LitElement {
     if (!this.note) return html`<i>No note</i>`;
 
     return html`
-        <md-outlined-text-field
+        <md-filled-text-field
           @input="${this.updateNoteTitle}"
           .value="${this.note?.title || ""}"
           placeholder="New note"
-        ></md-outlined-text-field>
+        ></md-filled-text-field>
         ${this.renderUrlIcon()}
         <div class="url">${this.note?.url}</div>
         <md-outlined-text-field
           @input=${this.updateNoteContent}
           .value="${this.note?.content || ""}"
-          multiline
+          type="textarea"
           placeholder="Empty"
         ></md-outlined-text-field>
         <div>
@@ -157,6 +158,25 @@ export class NoteElement extends LitElement {
     :host([scope="other"]) {
       background-color: var(--spectrum-gray-200);
       border: 1px solid var(--spectrum-gray-300);
+    }
+
+    md-filled-text-field {
+      --md-filled-text-field-container-color: transparent;
+      --md-filled-text-field-top-space: 0px;
+      --md-filled-text-field-bottom-space: 0px;
+      --md-filled-text-field-leading-space: 2px;
+      --md-filled-text-field-trailing-space: 2px;
+    }
+    
+    md-outlined-text-field {
+      --md-outlined-text-field-container-shape: 2px;
+      --md-outlined-text-field-top-space: 2x;
+      --md-outlined-text-field-bottom-space: 2px;
+      --md-outlined-field-leading-space: 0px;
+      --md-outlined-field-trailing-space: 0px;
+      --md-outlined-field-outline-color: lightgray;
+      --md-outlined-text-field-input-text-type: 350 0.8rem/1rem Roboto;
+      --width: 100%;
     }
 
     div.url {
