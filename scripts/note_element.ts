@@ -170,7 +170,7 @@ export class NoteElement extends LitElement {
     
     md-outlined-text-field {
       --md-outlined-text-field-container-shape: 2px;
-      --md-outlined-text-field-top-space: 2x;
+      --md-outlined-text-field-top-space: 2px;
       --md-outlined-text-field-bottom-space: 2px;
       --md-outlined-field-leading-space: 0px;
       --md-outlined-field-trailing-space: 0px;
