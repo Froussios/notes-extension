@@ -2,14 +2,9 @@ import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
 import { calculateSimilarityScore } from "./util";
-import "@spectrum-web-components/textfield/sp-textfield.js";
-import "@spectrum-web-components/divider/sp-divider.js";
-import "@spectrum-web-components/theme/sp-theme.js";
-import "@spectrum-web-components/theme/src/themes.js";
-import "@spectrum-web-components/icons-workflow/icons/sp-icon-globe.js";
-import "@spectrum-web-components/icons-workflow/icons/sp-icon-globe-clock.js";
-import "@spectrum-web-components/icons-workflow/icons/sp-icon-building.js";
-import "@spectrum-web-components/button/sp-button.js";
+import "@material/web/button/text-button";
+import "@material/web/icon/icon";
+import "@material/web/textfield/outlined-text-field";
 
 @customElement("note-element")
 export class NoteElement extends LitElement {
@@ -104,52 +99,44 @@ export class NoteElement extends LitElement {
     if (!this.note) return html`<i>No note</i>`;
 
     return html`
-      <sp-theme scale="medium" color="light" theme="spectrum">
-        <sp-textfield
+        <md-outlined-text-field
           @input="${this.updateNoteTitle}"
           .value="${this.note?.title || ""}"
           placeholder="New note"
-          quiet
-        ></sp-textfield>
+        ></md-outlined-text-field>
         ${this.renderUrlIcon()}
         <div class="url">${this.note?.url}</div>
-        <sp-textfield
+        <md-outlined-text-field
           @input=${this.updateNoteContent}
           .value="${this.note?.content || ""}"
           multiline
           placeholder="Empty"
-        ></sp-textfield>
+        ></md-outlined-text-field>
         <div>
-          <sp-button
-            variant="secondary"
-            size="s"
+          <md-text-button
             @click="${this.saveNote}"
             ?disabled=${!this.isDirty}
           >
             Save
-          </sp-button>
-          <sp-button
-            variant="secondary"
-            size="s"
+          </md-text-button>
+          <md-text-button
             @click="${this.deleteNote}"
             ?disabled=${this.isNewNote}
           >
             Delete
-          </sp-button>
+          </md-text-button>
         </div>
-      </sp-theme>
     `;
   }
 
   renderUrlIcon() {
     switch (this.scope) {
       case "exact":
-        return html`<sp-icon-globe></sp-icon-globe>`;
+        return html`Here`;
       case "host":
-        return html`<sp-icon-building></sp-icon-building>`;
-      case "other":
+        return html`Org`;
       default:
-        return html``;
+        return html`Global`;
     }
   }
 

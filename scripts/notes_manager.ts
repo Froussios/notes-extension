@@ -1,9 +1,9 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
-import "@spectrum-web-components/divider/sp-divider.js";
-import "@spectrum-web-components/button/sp-button.js";
 import { calculateSimilarityScore } from "./util";
+import "@material/web/button/filled-button";
+import "@material/web/divider/divider";
 
 async function getCurrentTab(): Promise<chrome.tabs.Tab> {
   let queryOptions = { active: true, lastFocusedWindow: true };
@@ -75,12 +75,11 @@ export class NoteManager extends LitElement {
 
   render() {
     return html`
-      <sp-theme scale="medium" color="light" theme="spectrum">
         <span>
-          <sp-button @click="${this.createNote}">Create Note</sp-button>
+          <md-filled-button @click="${this.createNote}">Create Note</md-filled-button>
           <div>for ${this.currentUrl}</div>
         </span>
-        <sp-divider size="l"></sp-divider>
+        <md-divider></md-divider>
         ${this.hostNotes.map(
       (note) =>
         html`
@@ -89,13 +88,11 @@ export class NoteManager extends LitElement {
                 .isNewNote=${false}
                 .context=${this.currentUrl}
               ></note-element>
-              <sp-divider size="m"></sp-divider>
+              <md-divider></md-divider>
             `
     )}
-        <div id="everything-else">
-          <h3>Everything else</h3>
-          <sp-divider size="l"></sp-divider>
-        </div>
+        <h3>Everything else</h3>
+        <md-divider></md-divider>
         ${this.otherNotes.map(
       (note) =>
         html`
@@ -104,10 +101,9 @@ export class NoteManager extends LitElement {
                 .isNewNote=${false}
                 .context=${this.currentUrl}
               ></note-element>
-              <sp-divider size="m"></sp-divider>
+              <md-divider></md-divider>
             `
     )}
-      </sp-theme>
     `;
   }
 
@@ -121,19 +117,8 @@ export class NoteManager extends LitElement {
       width: 100%;
     }
 
-    #everything-else {
-      background-color: var(--spectrum-gray-300);
-      border-top-left-radius: 4px;
-      border-top-right-radius: 24px 4px;
-      padding-top: 12px;
-    }
-    #everything-else h3 {
-      margin-left: 8px;
-      margin-right: 8px;
-      margin-bottom: 8px;
-    }
-    #everything-else sp-divider {
-      margin: 0 0 10px 0;
+    md-divider {
+      margin: 4px 0 10px 0;
       width: 100%;
     }
   `;
