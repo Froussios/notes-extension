@@ -1,11 +1,14 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, query } from "lit/decorators.js";
 import { Note } from "./model/note";
 import { calculateSimilarityScore } from "./util";
 import "@material/web/button/text-button";
 import "@material/web/icon/icon";
 import "@material/web/textfield/outlined-text-field";
+import { MdOutlinedTextField } from "@material/web/textfield/outlined-text-field";
 import "@material/web/textfield/filled-text-field";
+
+const MIN_TEXTAREA_LINES = 3;
 
 @customElement("note-element")
 export class NoteElement extends LitElement {
@@ -17,6 +20,8 @@ export class NoteElement extends LitElement {
     | "exact"
     | "host"
     | "other" = "other";
+
+  @query('md-outlined-text-field') private readonly noteTextEl?: MdOutlinedTextField | null;
 
   updateScope() {
     if (!this.context || !this.note) {
@@ -67,6 +72,7 @@ export class NoteElement extends LitElement {
     if (this.note) {
       this.note.content = target.value;
     }
+    this.noteTextEl!.rows = Math.max(target.value.split('\n').length, MIN_TEXTAREA_LINES);
     this.isDirty = true;
     this.requestUpdate();
   }
@@ -115,6 +121,7 @@ export class NoteElement extends LitElement {
           .value="${this.note?.content || ""}"
           type="textarea"
           placeholder="Empty"
+          rows=${MIN_TEXTAREA_LINES}
         ></md-outlined-text-field>
         <div>
           <md-text-button
