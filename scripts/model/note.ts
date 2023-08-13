@@ -52,6 +52,7 @@ export class Note {
   // Static method to fetch all notes from localStorage
   static getAllNotes(): Note[] {
     const notesStr = localStorage.getItem("notes");
+    console.log(`Loaded ${notesStr?.length || 0} bytes`);
     const notesObj = notesStr ? JSON.parse(notesStr) : [];
     const notes = notesObj.map(
       (n: any) => new Note(n.id, n.title, n.content, n.url)
@@ -68,6 +69,7 @@ export class Note {
 
   static persistAllNotes(notes: Note[]) {
     const str = JSON.stringify(notes);
+    console.log(`Saving ${str.length} bytes`);
     localStorage.setItem("notes", str);
   }
 }
