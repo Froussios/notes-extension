@@ -75,9 +75,11 @@ export class NoteManager extends LitElement {
 
   render() {
     return html`
+      <div>
+        <link rel="stylesheet" href="css/theme.css">
         <span>
           <md-filled-button @click="${this.createNote}">Create Note</md-filled-button>
-          <div>for ${this.currentUrl}</div>
+          <div class="label-medium">for ${this.currentUrl}</div>
         </span>
         <md-divider></md-divider>
         ${this.hostNotes.map(
@@ -91,7 +93,7 @@ export class NoteManager extends LitElement {
               <md-divider></md-divider>
             `
     )}
-        <h3>Everything else</h3>
+        <h3 class="title-medium">Everything else</h3>
         <md-divider></md-divider>
         ${this.otherNotes.map(
       (note) =>
@@ -104,6 +106,7 @@ export class NoteManager extends LitElement {
               <md-divider></md-divider>
             `
     )}
+      </div>
     `;
   }
 
@@ -111,6 +114,8 @@ export class NoteManager extends LitElement {
     :host {
       display: inline-block;
       width: 100%;
+      color: var(--md-sys-color-on-background);
+      background: var(--md-sys-color-background);
     }
 
     note-element {

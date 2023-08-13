@@ -20,7 +20,7 @@ export class NoteElement extends LitElement {
 
   updateScope() {
     if (!this.context || !this.note) {
-      this.scope = "other";
+      this.scope = "exact"; // TODO Should this be other?
       return;
     }
 
@@ -102,13 +102,14 @@ export class NoteElement extends LitElement {
     return html`
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
+        <link rel="stylesheet" href="css/theme.css">
         <md-filled-text-field
           @input="${this.updateNoteTitle}"
           .value="${this.note?.title || ""}"
           placeholder="New note"
         ></md-filled-text-field>
         ${this.renderUrlIcon()}
-        <div class="url">${this.note?.url}</div>
+        <div class="url title-small">${this.note?.url}</div>
         <md-outlined-text-field
           @input=${this.updateNoteContent}
           .value="${this.note?.content || ""}"
@@ -147,19 +148,20 @@ export class NoteElement extends LitElement {
     :host {
       display: inline-block;
       padding: 10px;
-      color: #333;
+      color: var(--md-sys-color-on-background);
+      background: var(--md-sys-color-background);
+      box-sizing: border-box;
     }
 
     :host([scope="exact"]),
     :host([scope="host"]) {
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-      background-color: var(--spectrum-yellow-100);
-      border: 1px solid var(--spectrum-yellow-200);
+      box-shadow: 2px 2px 5px var(--md-sys-color-shadow);
+      background-color: var(--md-sys-color-tertiary-container);
+      border: 1px solid var(--md-sys-color-outline);
     }
 
     :host([scope="other"]) {
-      background-color: var(--spectrum-gray-200);
-      border: 1px solid var(--spectrum-gray-300);
+      border: 1px solid var(--md-sys-color-outline-variant);
     }
 
     md-filled-text-field {
@@ -176,15 +178,16 @@ export class NoteElement extends LitElement {
       --md-outlined-text-field-bottom-space: 2px;
       --md-outlined-field-leading-space: 0px;
       --md-outlined-field-trailing-space: 0px;
-      --md-outlined-field-outline-color: lightgray;
+      --md-outlined-field-outline-color: var(--md-sys-color-outline-variant);
       --md-outlined-text-field-input-text-type: 350 0.8rem/1rem Roboto;
-      --width: 100%;
+      width: 100%;
+      margin-top: 4px;
     }
 
     div.url {
+      margin-inline: 2px;
       overflow: hidden;
-      font-weight: lighter;
-      color: gray;
+      color: var(--md-sys-color-secondary);
     }
   `;
 }
