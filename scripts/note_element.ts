@@ -67,12 +67,17 @@ export class NoteElement extends LitElement {
     this.requestUpdate();
   }
 
+  private getNoteLength() {
+    if (!this.note) return 3;
+    return Math.max(this.note.content.split('\n').length, MIN_TEXTAREA_LINES);
+  }
+
   private updateNoteContent(event: Event) {
     const target = event.target as HTMLTextAreaElement;
     if (this.note) {
       this.note.content = target.value;
     }
-    this.noteTextEl!.rows = Math.max(target.value.split('\n').length, MIN_TEXTAREA_LINES);
+    this.noteTextEl!.rows = this.getNoteLength();
     this.isDirty = true;
     this.requestUpdate();
   }
@@ -121,7 +126,7 @@ export class NoteElement extends LitElement {
           .value="${this.note?.content || ""}"
           type="textarea"
           placeholder="Empty"
-          rows=${MIN_TEXTAREA_LINES}
+          rows=${this.getNoteLength()}
         ></md-outlined-text-field>
         <div>
           <md-text-button
