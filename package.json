@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "tsc && yarn parcel build build/sidepanel.js",
-    "clear": "rm -rf build/ dist/"
+    "clear": "rm -rf build/ dist/",
+    "package": "zip extension.zip manifest.json sidepanel.html dist/ css/ images/"
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",
