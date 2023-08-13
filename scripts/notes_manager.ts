@@ -79,7 +79,7 @@ export class NoteManager extends LitElement {
         <link rel="stylesheet" href="css/theme.css">
         <span>
           <md-filled-button @click="${this.createNote}">Create Note</md-filled-button>
-          <div class="label-medium">for ${this.currentUrl}</div>
+          <div class="context label-medium">for ${this.currentUrl}</div>
         </span>
         <md-divider></md-divider>
         ${this.hostNotes.map(
@@ -116,6 +116,12 @@ export class NoteManager extends LitElement {
       width: 100%;
       color: var(--md-sys-color-on-background);
       background: var(--md-sys-color-background);
+    }
+
+    .context {
+      margin-top: 2px;
+      margin-inline: 8px;
+      color: var(--md-sys-color-secondary);
     }
 
     note-element {
