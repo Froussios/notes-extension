@@ -100,6 +100,8 @@ export class NoteElement extends LitElement {
     if (!this.note) return html`<i>No note</i>`;
 
     return html`
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
         <md-filled-text-field
           @input="${this.updateNoteTitle}"
           .value="${this.note?.title || ""}"
@@ -133,11 +135,11 @@ export class NoteElement extends LitElement {
   renderUrlIcon() {
     switch (this.scope) {
       case "exact":
-        return html`Here`;
+        return html``;
       case "host":
-        return html`Org`;
+        return html`<i class="material-icons" translate="no">domain</i>`;
       default:
-        return html`Global`;
+        return html`<i class="material-icons" translate="no">public</i>`;
     }
   }
 
