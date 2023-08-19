@@ -25,14 +25,5 @@
   },
   "background": {
     "service_worker": "dist/background.js"
-  },
-  "content_scripts": [
-    {
-      "js": ["dist/sidepanel.js"],
-      "matches": [
-        "https://developer.chrome.com/docs/extensions/*",
-        "https://developer.chrome.com/docs/webstore/*"
-      ]
-    }
-  ]
+  }
 }
