@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc && yarn parcel build build/sidepanel.js",
+    "build": "tsc && yarn parcel build build/sidepanel.js build/background.js",
     "clear": "rm -rf build/ dist/",
     "package": "zip extension.zip manifest.json sidepanel.html dist/ css/ images/"
   },

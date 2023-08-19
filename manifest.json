@@ -10,8 +10,21 @@
     "128": "images/icon-128.png"
   },
   "permissions": ["sidePanel", "tabs"],
+  "minimum_chrome_version": "116",
+  "action": {
+    "default_icon": {
+      "16": "images/icon-16.png",
+      "32": "images/icon-32.png",
+      "48": "images/icon-48.png",
+      "128": "images/icon-128.png"
+    },
+    "default_title": "Show notes"
+  },
   "side_panel": {
     "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "dist/background.js"
   },
   "content_scripts": [
     {
