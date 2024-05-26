@@ -1,8 +1,8 @@
 /node_modules
-/dist/**/*
-/build/**/*
-/build-test/**/*
-/extension/**/*
-.parcel-cache/**
+/dist
+/build
+/build-test
+/extension
+.parcel-cache
 extension.zip
 extension.crx
