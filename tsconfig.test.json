@@ -7,5 +7,7 @@
     "module": "commonjs",
     "moduleResolution": "NodeNext"
   },
-  "include": ["./scripts/**/*.test.ts"]
+  "include": ["./scripts/**/*.test.ts"],
+  // The base config excludes test files. This resets it.
+  "exclude": []
 }
