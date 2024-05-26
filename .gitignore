@@ -1,6 +1,7 @@
 /node_modules
 /dist/**/*
 /build/**/*
+/build-test/**/*
 /extension/**/*
 .parcel-cache/**
 extension.zip

@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "outDir": "./build-test/",
+    "lib": ["ESNext", "DOM"],
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["./scripts/**/*.test.ts"]
+}

@@ -1,15 +1,18 @@
 {
   "scripts": {
     "build": "tsc && yarn parcel build build/sidepanel.js build/background.js",
-    "clear": "rm -rf build/ dist/ extension/ extension.*",
-    "package": "yarn build && sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*"
+    "clear": "rm -rf build/ build-test/ dist/ extension/ extension.*",
+    "package": "yarn build && sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*",
+    "test": "yarn tsc -p ./tsconfig.test.json && yarn jest build-test"
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",
     "lit": "^2.7.6"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
     "chrome-types": "^0.1.219",
+    "jest": "^29.7.0",
     "parcel": "^2.9.3",
     "typescript": "^5.1.6"
   }

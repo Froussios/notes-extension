@@ -1,3 +1,11 @@
+
+/**
+ * Scores the affinity of `url1` to `url2`. Higher score means the urls are more similar.
+ *
+ * @param url1
+ * @param url2
+ * @returns
+ */
 export function calculateSimilarityScore(url1: string, url2: string): number {
   const parsedUrl1 = new URL(url1);
   const parsedUrl2 = new URL(url2);
