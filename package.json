@@ -1,8 +1,8 @@
 {
   "scripts": {
     "build": "tsc && yarn parcel build build/sidepanel.js build/background.js",
-    "clear": "rm -rf build/ dist/",
-    "package": "zip extension.zip manifest.json sidepanel.html dist/ css/ images/"
+    "clear": "rm -rf build/ dist/ extension/ extension.*",
+    "package": "yarn build && sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*"
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",

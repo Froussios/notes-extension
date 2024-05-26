@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pagenotes",
-  "version": "0.5",
+  "version": "0.6",
   "description": "Simple note-taking app, that lives in Chrome's sidepanel.",
   "icons": {
     "16": "images/icon-16.png",
