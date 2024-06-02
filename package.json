@@ -1,9 +1,9 @@
 {
   "scripts": {
     "build": "tsc && yarn parcel build build/sidepanel.js build/background.js",
-    "clear": "rm -rf build/ build-test/ dist/ extension/ extension.*",
+    "clear": "rm -rf build/ build-test/ dist/ extension/ extension.* .parcel-cache/",
     "package": "yarn build && sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*",
-    "test": "yarn jest scripts"
+    "test": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/* && yarn jest build-test/dist/"
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",
