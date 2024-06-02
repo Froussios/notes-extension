@@ -3,8 +3,8 @@
     "build": "tsc && yarn parcel build build/sidepanel.js build/background.js",
     "clear": "rm -rf build/ build-test/ dist/ extension/ extension.* .parcel-cache/",
     "package": "yarn build && sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*",
-    "test": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/* && npx jasmine-browser-runner runSpecs",
-    "test-local": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/* && npx jasmine-browser-runner serve"
+    "test": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/*.test.js && npx jasmine-browser-runner runSpecs",
+    "test-local": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/*.test.js && npx jasmine-browser-runner serve"
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",

@@ -1,11 +1,7 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "outDir": "./build-test/js/",
-    "lib": ["ESNext", "DOM"],
-    "target": "esnext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "outDir": "./build-test/js/"
   },
   "include": ["./scripts/**/*.test.ts"],
   // The base config excludes test files. This resets it.
