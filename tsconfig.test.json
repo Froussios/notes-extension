@@ -4,7 +4,7 @@
     "outDir": "./build-test/js/",
     "lib": ["ESNext", "DOM"],
     "target": "esnext",
-    "module": "commonjs",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext"
   },
   "include": ["./scripts/**/*.test.ts"],

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
-    "types": ["./node_modules/chrome-types/_all.d.ts", "jest"],
+    "types": ["./node_modules/chrome-types/_all.d.ts", "jasmine"],
     "outDir": "./build/",
     "lib": ["ESNext", "DOM"],
     "experimentalDecorators": true,
