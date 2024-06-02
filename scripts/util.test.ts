@@ -1,6 +1,10 @@
 import { calculateSimilarityScore } from "./util";
 
 describe("Util compares", function () {
+  // it('Fails', () => {
+  //   fail();
+  // });
+
   it('Same urls', () => {
     expect(calculateSimilarityScore("http://www.examples.com/path", "http://www.examples.com/path")).toBe(3);
   });

@@ -1,15 +1,13 @@
 {
-  "srcDir": "src",
-  "srcFiles": ["dist/*.ts"],
+  "srcDir": "build-test/dist",
   "specDir": "build-test/dist",
   "specFiles": ["**/*.test.js"],
-  "helpers": ["helpers/**/*.js"],
   "env": {
     "stopSpecOnExpectationFailure": false,
     "stopOnSpecFailure": false,
     "random": true
   },
   "browser": {
-    "name": "firefox"
+    "name": "chrome"
   }
 }
