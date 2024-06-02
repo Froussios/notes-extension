@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.231.6/containers/cpp
 {
-  "name": "C++",
+  "name": "Typescript-node",
   "build": {
     "dockerfile": "Dockerfile"
   }
