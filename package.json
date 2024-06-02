@@ -16,7 +16,6 @@
     "jasmine-browser-runner": "^2.4.0",
     "jasmine-core": "^5.1.2",
     "parcel": "^2.9.3",
-    "ts-jest": "^29.1.3",
     "typescript": "^5.1.6"
   }
 }
