@@ -19,5 +19,22 @@ describe("Sync", function () {
 
     expect(notes_str).toEqual(notes_decrypted);
   });
+
+  it('does not skip encryption', async () => {
+    // Return a new key. Decryption should fail because keys don't match.
+    spyOn(Sync, "getEncryptionKey").and.callFake(() => Sync.generateEncryptionKey());
+
+    const notes = [new Note(
+      "noteid",
+      "title",
+      "stuff",
+      "http://www.example.com"
+    )];
+    const notes_str = JSON.stringify(notes);
+
+    const notes_encrypted = await Sync.encrypt(notes_str);
+
+    await expectAsync(Sync.decrypt(notes_encrypted)).toBeRejected();
+  });
 });
 
