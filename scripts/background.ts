@@ -1,3 +1,5 @@
-chrome.action.onClicked.addListener((tab) => {
-    chrome.sidePanel.open({});
+chrome.action.onClicked.addListener((tab: chrome.tabs.Tab) => {
+    chrome.sidePanel.open({
+        tabId: tab.id
+    });
 });
