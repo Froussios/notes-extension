@@ -5,7 +5,8 @@
     "clear": "rm -rf build/ build-test/ dist/ extension/ extension.* .parcel-cache/",
     "package": "yarn build && sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*",
     "test": "yarn build-tests && xvfb-run yarn jasmine-browser-runner runSpecs",
-    "test-local": "yarn build-tests && yarn jasmine-browser-runner serve"
+    "test-local": "yarn build-tests && yarn jasmine-browser-runner runSpecs",
+    "test-debug": "yarn build-tests && yarn jasmine-browser-runner serve"
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",
