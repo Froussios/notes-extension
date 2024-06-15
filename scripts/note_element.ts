@@ -95,6 +95,8 @@ export class NoteElement extends LitElement {
       this.note.delete();
       this.isNewNote = true;
       this.isDirty = true;
+
+      this.requestUpdate();
     }
   }
 
@@ -109,6 +111,8 @@ export class NoteElement extends LitElement {
 
   render() {
     if (!this.note) return html`<i>No note</i>`;
+    if (!!this.note.softDeleted)
+      return html`<i>Deleted</i>`;
 
     return html`
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -183,7 +187,7 @@ export class NoteElement extends LitElement {
       --md-filled-text-field-leading-space: 2px;
       --md-filled-text-field-trailing-space: 2px;
     }
-    
+
     md-outlined-text-field {
       --md-outlined-text-field-container-shape: 2px;
       --md-outlined-text-field-top-space: 2px;

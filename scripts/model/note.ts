@@ -5,6 +5,7 @@ export interface NoteLike {
   title: string;
   content: string;
   url: string;
+  _softDeleted: string | undefined;
 }
 
 export class Note implements NoteLike {
@@ -12,6 +13,15 @@ export class Note implements NoteLike {
   title: string;
   content: string;
   url: string;
+  _softDeleted: string | undefined;
+
+  get softDeleted(): Date | null {
+    return this._softDeleted ? new Date(this._softDeleted) : null;
+  }
+
+  set softDeleted(date: Date) {
+    this._softDeleted = date.toISOString();
+  }
 
   constructor(id: string, title: string, content: string, url: string) {
     this.id = id;
@@ -23,12 +33,14 @@ export class Note implements NoteLike {
   }
 
   static fromNoteLike(notelike: NoteLike): Note {
-    return new Note(
+    const note = new Note(
       notelike.id,
       notelike.title,
       notelike.content,
       notelike.url
     );
+    note._softDeleted = notelike._softDeleted;
+    return note;
   }
 
   private validate() {
@@ -57,14 +69,17 @@ export class Note implements NoteLike {
   }
 
   // Delete the note from localStorage
-  delete() {
+  delete(hardDelete = false) {
     const notes = Note.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
     if (index !== -1) {
-      notes.splice(index, 1);
-      Note.persistAllNotes(notes);
+      this.softDeleted = notes[index].softDeleted = new Date();
+      if (hardDelete)
+        notes.splice(index, 1);
     }
+
+    Note.persistAllNotes(notes);
   }
 
   // Static method to fetch all notes from localStorage
@@ -73,7 +88,7 @@ export class Note implements NoteLike {
     console.log(`Loaded ${notesStr?.length || 0} bytes`);
     const notesObj = notesStr ? JSON.parse(notesStr) : [];
     const notes = notesObj.map(
-      (n: any) => new Note(n.id, n.title, n.content, n.url)
+      (n: NoteLike) => Note.fromNoteLike(n)
     );
 
     console.assert(Array.isArray(notes));
@@ -83,6 +98,7 @@ export class Note implements NoteLike {
     }
 
     // TODO Merge with local notes
+    // TODO Do this somewhere less busy.
     Sync.downloadNotes().then(notes => console.log("Downloaded", notes));
 
     return notes;

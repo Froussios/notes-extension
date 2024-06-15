@@ -28,7 +28,7 @@ export class NoteManager extends LitElement {
   constructor() {
     super();
     // Load existing notes from localStorage
-    this.notes = Note.getAllNotes();
+    this.notes = Note.getAllNotes().filter(note => !note.softDeleted);
   }
 
   private createNote() {
