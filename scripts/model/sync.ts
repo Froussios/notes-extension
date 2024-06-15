@@ -1,4 +1,4 @@
-import { Note } from "./note";
+import { Note, NoteLike } from "./note";
 
 // type EncryptedStr = {
 //   data: ArrayBuffer,
@@ -128,5 +128,17 @@ export class Sync {
       },
       body: body
     });
+  }
+
+  static async downloadNotes(): Promise<Note[]> {
+    const userid = await this.getUserKey();
+
+    const UPLOAD_URL = `https://europe-west6-notes-extension-425902.cloudfunctions.net/getNotes/user/${userid}`;
+    const response = await fetch(UPLOAD_URL);
+
+    const notes_encrypted = await response.json();
+    const notes_str = await Sync.decrypt(notes_encrypted);
+    const notes = JSON.parse(notes_str).map((n: NoteLike) => Note.fromNoteLike(n));
+    return notes;
   }
 }

@@ -1,6 +1,13 @@
 import { Sync } from "./sync";
 
-export class Note {
+export interface NoteLike {
+  id: string;
+  title: string;
+  content: string;
+  url: string;
+}
+
+export class Note implements NoteLike {
   id: string;
   title: string;
   content: string;
@@ -13,6 +20,15 @@ export class Note {
     this.url = url || "";
 
     this.validate();
+  }
+
+  static fromNoteLike(notelike: NoteLike): Note {
+    return new Note(
+      notelike.id,
+      notelike.title,
+      notelike.content,
+      notelike.url
+    );
   }
 
   private validate() {
@@ -65,6 +81,9 @@ export class Note {
     if (!notes.every((n: Note) => !!n.url)) {
       console.warn("Loaded note without url", notes);
     }
+
+    // TODO Merge with local notes
+    Sync.downloadNotes().then(notes => console.log("Downloaded", notes));
 
     return notes;
   }
