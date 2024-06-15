@@ -1,3 +1,5 @@
+import { Sync } from "./sync";
+
 export class Note {
   id: string;
   title: string;
@@ -67,9 +69,11 @@ export class Note {
     return notes;
   }
 
-  static persistAllNotes(notes: Note[]) {
+  static async persistAllNotes(notes: Note[]) {
     const str = JSON.stringify(notes);
     console.log(`Saving ${str.length} bytes`);
     localStorage.setItem("notes", str);
+
+    await Sync.uploadNotes(notes);
   }
 }

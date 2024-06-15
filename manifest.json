@@ -9,7 +9,10 @@
     "48": "images/icon-48.png",
     "128": "images/icon-128.png"
   },
-  "permissions": ["sidePanel", "tabs", "storage"],
+  "permissions": ["sidePanel", "tabs", "storage", "identity", "identity.email"],
+  "host_permissions": [
+    "https://europe-west6-notes-extension-425902.cloudfunctions.net/"
+  ],
   "minimum_chrome_version": "116",
   "action": {
     "default_icon": {
