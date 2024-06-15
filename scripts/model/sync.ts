@@ -117,9 +117,9 @@ export class Sync {
     const notes_str = JSON.stringify(notes);
     const notes_encrypted = await Sync.encrypt(notes_str);
     const body = JSON.stringify(notes_encrypted);
-    const id = await this.getUserKey();
+    const userid = await this.getUserKey();
 
-    const UPLOAD_URL = `https://europe-west6-notes-extension-425902.cloudfunctions.net/put-notes/user/${userid}`;
+    const UPLOAD_URL = `https://europe-west6-notes-extension-425902.cloudfunctions.net/postNotes/user/${userid}`;
     await fetch(UPLOAD_URL, {
       method: 'POST',
       headers: {
