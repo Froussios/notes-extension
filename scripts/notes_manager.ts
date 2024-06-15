@@ -27,8 +27,7 @@ export class NoteManager extends LitElement {
 
   constructor() {
     super();
-    // Load existing notes from localStorage
-    this.notes = Note.getAllNotes().filter(note => !note.softDeleted);
+    this.notes = [];
   }
 
   private createNote() {
@@ -61,11 +60,14 @@ export class NoteManager extends LitElement {
     this.requestUpdate();
   }
 
-  firstUpdated() {
+  async firstUpdated() {
     this.refreshContext();
 
     chrome.tabs.onActivated.addListener(() => this.refreshContext());
     chrome.tabs.onUpdated.addListener(() => this.refreshContext());
+
+    const allNotes = await Note.getAllNotes();
+    this.notes = allNotes.filter(note => !note.softDeleted);
   }
 
   prioritiseNote(note: Note | null | undefined) {

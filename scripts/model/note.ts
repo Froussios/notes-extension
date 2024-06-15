@@ -51,10 +51,10 @@ export class Note implements NoteLike {
   }
 
   // Save the note to localStorage
-  save() {
+  async save() {
     this.validate();
 
-    const notes = Note.getAllNotes();
+    const notes = await Note.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
     if (index !== -1) {
@@ -69,8 +69,8 @@ export class Note implements NoteLike {
   }
 
   // Delete the note from localStorage
-  delete(hardDelete = false) {
-    const notes = Note.getAllNotes();
+  async delete(hardDelete = false) {
+    const notes = await Note.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
     if (index !== -1) {
@@ -83,8 +83,8 @@ export class Note implements NoteLike {
   }
 
   // Undo a hard or a soft delete.
-  undelete() {
-    const notes = Note.getAllNotes();
+  async undelete() {
+    const notes = await Note.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
     if (index !== -1) {
@@ -98,7 +98,7 @@ export class Note implements NoteLike {
   }
 
   // Static method to fetch all notes from localStorage
-  static getAllNotes(): Note[] {
+  static async getAllNotes(): Promise<Note[]> {
     const notesStr = localStorage.getItem("notes");
     console.log(`Loaded ${notesStr?.length || 0} bytes`);
     const notesObj = notesStr ? JSON.parse(notesStr) : [];
@@ -114,7 +114,7 @@ export class Note implements NoteLike {
 
     // TODO Merge with local notes
     // TODO Do this somewhere less busy.
-    Sync.downloadNotes().then(notes => console.log("Downloaded", notes));
+    await Sync.downloadNotes().then(notes => console.log("Downloaded", notes));
 
     return notes;
   }
