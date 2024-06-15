@@ -68,6 +68,7 @@ export class NoteManager extends LitElement {
 
     const allNotes = await Note.getAllNotes();
     this.notes = allNotes.filter(note => !note.softDeleted);
+    this.requestUpdate();
   }
 
   prioritiseNote(note: Note | null | undefined) {

@@ -99,12 +99,8 @@ export class Note implements NoteLike {
 
   // Static method to fetch all notes from localStorage
   static async getAllNotes(): Promise<Note[]> {
-    const notesStr = localStorage.getItem("notes");
-    console.log(`Loaded ${notesStr?.length || 0} bytes`);
-    const notesObj = notesStr ? JSON.parse(notesStr) : [];
-    const notes = notesObj.map(
-      (n: NoteLike) => Note.fromNoteLike(n)
-    );
+    const notes = await Sync.downloadNotes();
+    console.log("Downloaded", notes);
 
     console.assert(Array.isArray(notes));
     console.assert(notes.every((n: Note) => n.validate()));
@@ -112,17 +108,12 @@ export class Note implements NoteLike {
       console.warn("Loaded note without url", notes);
     }
 
-    // TODO Merge with local notes
-    // TODO Do this somewhere less busy.
-    await Sync.downloadNotes().then(notes => console.log("Downloaded", notes));
-
     return notes;
   }
 
   static async persistAllNotes(notes: Note[]) {
     const str = JSON.stringify(notes);
     console.log(`Saving ${str.length} bytes`);
-    localStorage.setItem("notes", str);
 
     await Sync.uploadNotes(notes);
   }
