@@ -90,6 +90,14 @@ export class NoteElement extends LitElement {
     }
   }
 
+  private undeleteNote() {
+    if (this.note) {
+      this.note.undelete();
+      this.isNewNote = false;
+      this.isDirty = false;
+    }
+  }
+
   private deleteNote() {
     if (this.note) {
       this.note.delete();
@@ -112,7 +120,11 @@ export class NoteElement extends LitElement {
   render() {
     if (!this.note) return html`<i>No note</i>`;
     if (!!this.note.softDeleted)
-      return html`<i>Deleted</i>`;
+      return html`
+        <md-text-button @click="${this.undeleteNote}">
+          Undo delete
+        </md-text-button>
+      `;
 
     return html`
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"

@@ -82,6 +82,21 @@ export class Note implements NoteLike {
     Note.persistAllNotes(notes);
   }
 
+  // Undo a hard or a soft delete.
+  undelete() {
+    const notes = Note.getAllNotes();
+    const index = notes.findIndex((note: Note) => note.id === this.id);
+
+    if (index !== -1) {
+      this._softDeleted = notes[index]._softDeleted = undefined;
+    }
+    else {
+      notes.push(this);
+    }
+
+    Note.persistAllNotes(notes);
+  }
+
   // Static method to fetch all notes from localStorage
   static getAllNotes(): Note[] {
     const notesStr = localStorage.getItem("notes");
