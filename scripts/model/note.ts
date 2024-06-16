@@ -1,3 +1,4 @@
+import { DefaultStore } from "./note_backend";
 import { Sync } from "./sync";
 
 export interface NoteLike {
@@ -23,6 +24,8 @@ export class Note implements NoteLike {
     this._softDeleted = date.toISOString();
   }
 
+  get Store() { return DefaultStore; }
+
   constructor(id: string, title: string, content: string, url: string) {
     this.id = id;
     this.title = title || "";
@@ -43,7 +46,7 @@ export class Note implements NoteLike {
     return note;
   }
 
-  private validate() {
+  validate() {
     if (!this.id) {
       throw new Error("Required data is missing.");
     }
@@ -54,7 +57,7 @@ export class Note implements NoteLike {
   async save() {
     this.validate();
 
-    const notes = await Note.getAllNotes();
+    const notes = await this.Store.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
     if (index !== -1) {
@@ -65,12 +68,12 @@ export class Note implements NoteLike {
       notes.push(this);
     }
 
-    Note.persistAllNotes(notes);
+    this.Store.persistAllNotes(notes);
   }
 
   // Delete the note from localStorage
   async delete(hardDelete = false) {
-    const notes = await Note.getAllNotes();
+    const notes = await this.Store.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
     if (index !== -1) {
@@ -79,12 +82,12 @@ export class Note implements NoteLike {
         notes.splice(index, 1);
     }
 
-    Note.persistAllNotes(notes);
+    this.Store.persistAllNotes(notes);
   }
 
   // Undo a hard or a soft delete.
   async undelete() {
-    const notes = await Note.getAllNotes();
+    const notes = await this.Store.getAllNotes();
     const index = notes.findIndex((note: Note) => note.id === this.id);
 
     if (index !== -1) {
@@ -94,27 +97,6 @@ export class Note implements NoteLike {
       notes.push(this);
     }
 
-    Note.persistAllNotes(notes);
-  }
-
-  // Static method to fetch all notes from localStorage
-  static async getAllNotes(): Promise<Note[]> {
-    const notes = await Sync.downloadNotes();
-    console.log("Downloaded", notes);
-
-    console.assert(Array.isArray(notes));
-    console.assert(notes.every((n: Note) => n.validate()));
-    if (!notes.every((n: Note) => !!n.url)) {
-      console.warn("Loaded note without url", notes);
-    }
-
-    return notes;
-  }
-
-  static async persistAllNotes(notes: Note[]) {
-    const str = JSON.stringify(notes);
-    console.log(`Saving ${str.length} bytes`);
-
-    await Sync.uploadNotes(notes);
+    this.Store.persistAllNotes(notes);
   }
 }

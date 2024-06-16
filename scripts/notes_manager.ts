@@ -4,6 +4,7 @@ import { Note } from "./model/note";
 import { calculateSimilarityScore } from "./util";
 import "@material/web/button/filled-button";
 import "@material/web/divider/divider";
+import { DefaultStore } from "./model/note_backend";
 
 async function getCurrentTab(): Promise<chrome.tabs.Tab> {
   let queryOptions = { active: true, lastFocusedWindow: true };
@@ -66,7 +67,7 @@ export class NoteManager extends LitElement {
     chrome.tabs.onActivated.addListener(() => this.refreshContext());
     chrome.tabs.onUpdated.addListener(() => this.refreshContext());
 
-    const allNotes = await Note.getAllNotes();
+    const allNotes = await DefaultStore.getAllNotes();
     this.notes = allNotes.filter(note => !note.softDeleted);
     this.requestUpdate();
   }
