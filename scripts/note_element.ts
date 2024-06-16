@@ -7,8 +7,54 @@ import "@material/web/icon/icon";
 import "@material/web/textfield/outlined-text-field";
 import { MdOutlinedTextField } from "@material/web/textfield/outlined-text-field";
 import "@material/web/textfield/filled-text-field";
+import * as path from "path-browserify";
 
 const MIN_TEXTAREA_LINES = 3;
+
+@customElement("compact-url")
+class compact extends LitElement {
+  @property({ type: String }) url: string | null = null;
+
+  UrlParts() {
+    const parsed = new URL(this.url || "");
+    return {
+      host: parsed.host,
+      path: path.dirname(parsed.pathname),
+      item: `/${path.basename(parsed.pathname)}`
+    };
+  }
+
+  render() {
+    const parts = this.UrlParts();
+    return html`
+      <a href=${this.url || ""} class="three-part-container">
+        <span class="host">${parts.host}</span>
+        <span class="path">${parts.path}</span>
+        <span class="resource">${parts.item}</span>
+      </a>
+    `;
+  }
+
+  static styles = css`
+    :host {
+      display: inline;
+      margin-inline: 2px;
+    }
+
+    .three-part-container {
+      color: var(--md-sys-color-secondary);
+      display: flex;  /* Enables flexbox for easy control */
+      white-space: nowrap;
+      max-width: max-content;
+    }
+
+    .path {
+      flex: 1;  /* Grows to fill available space */
+      overflow: hidden;  /* Hides excess content */
+      text-overflow: ellipsis;  /* Adds ellipsis (...) if content overflows */
+    }
+  `;
+}
 
 @customElement("note-element")
 export class NoteElement extends LitElement {
@@ -136,7 +182,7 @@ export class NoteElement extends LitElement {
           placeholder="New note"
         ></md-filled-text-field>
         ${this.renderUrlIcon()}
-        <div class="url title-small">${this.note?.url}</div>
+        <compact-url url=${this.note?.url}></compact-url>
         <md-outlined-text-field
           @input=${this.updateNoteContent}
           .value="${this.note?.content || ""}"
@@ -210,12 +256,6 @@ export class NoteElement extends LitElement {
       --md-outlined-text-field-input-text-type: 350 0.8rem/1rem Roboto;
       width: 100%;
       margin-top: 4px;
-    }
-
-    div.url {
-      margin-inline: 2px;
-      overflow: hidden;
-      color: var(--md-sys-color-secondary);
     }
   `;
 }

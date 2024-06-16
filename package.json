@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",
-    "lit": "^2.7.6"
+    "@types/path-browserify": "^1.0.2",
+    "lit": "^2.7.6",
+    "path-browserify": "^1.0.1"
   },
   "devDependencies": {
     "@types/jasmine": "^5.1.4",
@@ -18,6 +20,7 @@
     "jasmine-browser-runner": "^2.4.0",
     "jasmine-core": "^5.1.2",
     "parcel": "^2.9.3",
+    "process": "^0.11.10",
     "typescript": "^5.1.6"
   }
 }
