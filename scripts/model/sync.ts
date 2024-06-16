@@ -133,8 +133,8 @@ export class Sync {
   static async downloadNotes(): Promise<Note[]> {
     const userid = await this.getUserKey();
 
-    const UPLOAD_URL = `https://europe-west6-notes-extension-425902.cloudfunctions.net/getNotes/user/${userid}`;
-    const response = await fetch(UPLOAD_URL);
+    const DOWNLOAD_URL = `https://europe-west6-notes-extension-425902.cloudfunctions.net/getNotes/user/${userid}`;
+    const response = await fetch(DOWNLOAD_URL);
 
     const notes_encrypted = await response.json();
     const notes_str = await Sync.decrypt(notes_encrypted);
