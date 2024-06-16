@@ -49,7 +49,7 @@ export class NoteManager extends LitElement {
   /** Show the active tab url. */
   private async refreshContext() {
     const tab = await getCurrentTab();
-    if (!tab.url) return;
+    if (!tab?.url) return;
     if (this.currentUrl === tab.url) return;
 
     this.currentUrl = tab.url;
