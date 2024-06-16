@@ -6,12 +6,21 @@ export interface NoteStore {
   // Fetches all notes stored in the store.
   getAllNotes(): Promise<Note[]>;
 
-  // Sets the contents of the store to `notes`.
-  persistAllNotes(notes: Note[]): Promise<void>;
+  // Insert `note` in the store. `note` must have a unique id.
+  insert(note: Note): Promise<void>;
+
+  // Updates `note` in the store, as identified by the id.
+  update(note: Note): Promise<void>;
+
+  // Update or insert `note`.
+  updateOrInsert(note: Note): Promise<void>;
+
+  // Hard-deletes `note` from the store, as identified by the id.
+  delete(note: Note): Promise<void>;
 }
 
 // Store that uploads and syncs notes.
-class NoteStoreSync implements NoteStore {
+abstract class NoteStoreSync {
   async getAllNotes(): Promise<Note[]> {
     const notes = await Sync.downloadNotes();
     console.log("Downloaded", notes);
@@ -25,11 +34,59 @@ class NoteStoreSync implements NoteStore {
     return notes;
   }
 
-  async persistAllNotes(notes: Note[]) {
+  protected async persistAllNotes(notes: Note[]) {
     const str = JSON.stringify(notes);
     console.log(`Saving ${str.length} bytes`);
     await Sync.uploadNotes(notes);
   }
 }
 
-export const DefaultStore = new NoteStoreSync();
+class NoteStoreImpl extends NoteStoreSync implements NoteStore {
+  async insert(note: Note): Promise<void> {
+    const notes = await this.getAllNotes();
+    const index = notes.findIndex((n: Note) => n.id === note.id);
+
+    if (index === -1)
+      notes.push(note);
+    else
+      throw new Error(`Note ${note.id} already exists`);
+
+    this.persistAllNotes(notes);
+  }
+
+  async update(note: Note): Promise<void> {
+    const notes = await this.getAllNotes();
+    const index = notes.findIndex((n: Note) => n.id === note.id);
+
+    if (index !== -1)
+      notes[index] = note;
+    else
+      throw new Error(`Note ${note.id} does not exist to be updated. Insert it first.`);
+
+    this.persistAllNotes(notes);
+  }
+
+  async updateOrInsert(note: Note): Promise<void> {
+    const notes = await this.getAllNotes();
+    const index = notes.findIndex((n: Note) => n.id === note.id);
+
+    if (index !== -1)
+      notes[index] = note;
+    else
+      notes.push(note);
+
+    this.persistAllNotes(notes);
+  }
+
+  async delete(note: Note): Promise<void> {
+    const notes = await this.getAllNotes();
+    const index = notes.findIndex((n: Note) => n.id === note.id);
+
+    if (index !== -1)
+      notes.splice(index, 1);
+
+    this.persistAllNotes(notes);
+  }
+}
+
+export const DefaultStore = new NoteStoreImpl();

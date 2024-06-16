@@ -57,46 +57,22 @@ export class Note implements NoteLike {
   async save() {
     this.validate();
 
-    const notes = await this.Store.getAllNotes();
-    const index = notes.findIndex((note: Note) => note.id === this.id);
-
-    if (index !== -1) {
-      // Update an existing note
-      notes[index] = this;
-    } else {
-      // Add a new note
-      notes.push(this);
-    }
-
-    this.Store.persistAllNotes(notes);
+    this.Store.updateOrInsert(this);
   }
 
   // Delete the note from localStorage
   async delete(hardDelete = false) {
-    const notes = await this.Store.getAllNotes();
-    const index = notes.findIndex((note: Note) => note.id === this.id);
+    this.softDeleted = new Date();
 
-    if (index !== -1) {
-      this.softDeleted = notes[index].softDeleted = new Date();
-      if (hardDelete)
-        notes.splice(index, 1);
-    }
-
-    this.Store.persistAllNotes(notes);
+    if (hardDelete)
+      this.Store.delete(this);
+    else
+      this.Store.updateOrInsert(this);
   }
 
   // Undo a hard or a soft delete.
   async undelete() {
-    const notes = await this.Store.getAllNotes();
-    const index = notes.findIndex((note: Note) => note.id === this.id);
-
-    if (index !== -1) {
-      this._softDeleted = notes[index]._softDeleted = undefined;
-    }
-    else {
-      notes.push(this);
-    }
-
-    this.Store.persistAllNotes(notes);
+    this._softDeleted = undefined;
+    this.Store.updateOrInsert(this);
   }
 }
