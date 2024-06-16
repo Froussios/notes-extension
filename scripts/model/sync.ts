@@ -136,6 +136,13 @@ export class Sync {
     const DOWNLOAD_URL = `https://europe-west6-notes-extension-425902.cloudfunctions.net/getNotes/user/${userid}`;
     const response = await fetch(DOWNLOAD_URL);
 
+    if (response.status == 404) {
+      console.info("The user does not have a cloud save.");
+      return [];
+    }
+
+    // TODO: on other failures, disable app.
+
     const notes_encrypted = await response.json();
     const notes_str = await Sync.decrypt(notes_encrypted);
     const notes = JSON.parse(notes_str).map((n: NoteLike) => Note.fromNoteLike(n));

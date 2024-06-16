@@ -22,6 +22,7 @@ export interface NoteStore {
 // Store that uploads and syncs notes.
 abstract class NoteStoreSync {
   async getAllNotes(): Promise<Note[]> {
+    console.log("Downloading from sync.");
     const notes = await Sync.downloadNotes();
     console.log("Downloaded", notes);
 
@@ -35,6 +36,7 @@ abstract class NoteStoreSync {
   }
 
   protected async persistAllNotes(notes: Note[]) {
+    console.log("Saving to sync.");
     const str = JSON.stringify(notes);
     console.log(`Saving ${str.length} bytes`);
     await Sync.uploadNotes(notes);

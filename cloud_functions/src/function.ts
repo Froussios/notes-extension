@@ -35,13 +35,28 @@ functions.http('getNotes', async (req, res) => {
     res.sendStatus(405);
     return;
   }
-  console.log(req);
 
   const parser = match("/user/:userid", { decode: decodeURIComponent });
   const { userid } = (parser(req.path) as any)["params"];
+  const filename = `${userid}.json`;
+  const bucketname = "notes-extension-425902-sync";
 
-  const file = await storage.bucket("notes-extension-425902-sync").file(`${userid}.json`);
+  console.info("Fetching save for", userid);
+
+  const file = await storage.bucket(bucketname).file(filename);
+
+  console.info("Checking if", filename, "exists");
+  if (!(await file.exists())[0]) {
+    console.info("Save file not found");
+    res.sendStatus(404);
+    return;
+  }
+
+  console.info("Downloading file");
+
   const download = await file.download({ decompress: true });
+
+  console.info("Forwarding");
 
   res.send(download.toString());
 });
