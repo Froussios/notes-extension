@@ -4,6 +4,7 @@ set -x
 
 npx tsc
 
+rm -rf build/function_source/
 mkdir -p build/function_source/
 cp -r build/tsc/ build/function_source/
 cp package.json package-lock.json build/function_source/
