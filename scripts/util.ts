@@ -1,3 +1,9 @@
+export enum Relevance {
+  NONE = 0,
+  SAME_HOST = 1,
+  SAME_PATH_PART = 2,
+  SAME_PATH = 3
+}
 
 /**
  * Scores the affinity of `url1` to `url2`. Higher score means the urls are more similar.
@@ -6,7 +12,7 @@
  * @param url2
  * @returns
  */
-export function calculateSimilarityScore(url1: string, url2: string): number {
+export function calculateSimilarityScore(url1: string, url2: string): Relevance {
   const parsedUrl1 = new URL(url1);
   const parsedUrl2 = new URL(url2);
 
@@ -15,7 +21,7 @@ export function calculateSimilarityScore(url1: string, url2: string): number {
     parsedUrl1.host === parsedUrl2.host &&
     parsedUrl1.pathname === parsedUrl2.pathname
   ) {
-    return 3;
+    return Relevance.SAME_PATH;
   }
 
   // Calculate score for same host and partial path match
@@ -23,14 +29,14 @@ export function calculateSimilarityScore(url1: string, url2: string): number {
     parsedUrl1.host === parsedUrl2.host &&
     parsedUrl1.pathname.includes(parsedUrl2.pathname)
   ) {
-    return 2;
+    return Relevance.SAME_PATH_PART;
   }
 
   // Calculate score for same host
   if (parsedUrl1.host === parsedUrl2.host) {
-    return 1;
+    return Relevance.SAME_HOST;
   }
 
   // Calculate score for everything else
-  return 0;
+  return Relevance.NONE;
 }
