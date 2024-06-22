@@ -1,10 +1,15 @@
 {
   "scripts": {
-    "build": "yarn tsc && yarn parcel build build/sidepanel.js build/background.js",
+    "build": "yarn tsc",
+    "postbuild": "yarn parcel build build/sidepanel.js build/background.js",
     "build-tests": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/**/*.test.js",
     "clear": "rm -rf build/ build-test/ dist/ extension/ extension.* .parcel-cache/",
-    "package": "yarn build && sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*",
-    "test": "yarn build-tests && xvfb-run yarn jasmine-browser-runner runSpecs",
+    "prepackage": "yarn build",
+    "package": "sh prepare_extension.sh && rm -f extension.zip && zip -r extension.zip extension/*",
+    "pretest": "yarn build-tests",
+    "pretest-local": "yarn build-tests",
+    "pretest-debug": "yarn build-tests",
+    "test": "xvfb-run yarn jasmine-browser-runner runSpecs",
     "test-local": "yarn build-tests && yarn jasmine-browser-runner runSpecs",
     "test-debug": "yarn build-tests && yarn jasmine-browser-runner serve"
   },
