@@ -80,22 +80,20 @@ export class NoteManagerCompact extends NoteManagerBase {
     return html`
       <div>
         <link rel="stylesheet" href="css/theme.css">
+        ${this.hostNotes.map((note) => html`
+            <note-element
+              .note="${note}"
+              .isNewNote=${false}
+              .context=${this.currentUrl}
+            ></note-element>
+            <md-divider></md-divider>
+          `
+    )}
+        <md-divider></md-divider>
         <span>
           <md-filled-button @click="${this.createNote}">Create Note</md-filled-button>
           <div class="context label-medium">for ${this.currentUrl}</div>
         </span>
-        <md-divider></md-divider>
-        ${this.hostNotes.map(
-      (note) =>
-        html`
-                  <note-element
-                    .note="${note}"
-                    .isNewNote=${false}
-                    .context=${this.currentUrl}
-                  ></note-element>
-                  <md-divider></md-divider>
-                `
-    )}
       </div>
     `;
   }

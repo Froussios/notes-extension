@@ -25,6 +25,7 @@ export class NoteManager extends LitElement {
   async openSidepanel() {
     const windowId = (await chrome.windows.getCurrent()).id;
     chrome.sidePanel.open({ windowId });
+    window.close();
   }
 
   static styles = css`
@@ -34,6 +35,11 @@ export class NoteManager extends LitElement {
       min-width: 240px;
       color: var(--md-sys-color-on-background);
       background: var(--md-sys-color-background);
+    }
+
+    md-divider {
+      margin: 4px 0 10px 0;
+      width: 100%;
     }
   `;
 }
