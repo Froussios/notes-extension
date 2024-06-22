@@ -1,7 +1,7 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { Note } from "./model/note";
-import { calculateSimilarityScore } from "./util";
+import { Relevance, calculateSimilarityScore } from "./util";
 import "@material/web/button/filled-button";
 import "@material/web/divider/divider";
 import { DefaultStore } from "./model/note_backend";
@@ -53,7 +53,7 @@ class NoteManagerBase extends LitElement {
     this.requestUpdate();
   }
 
-  protected prioritiseNote(note: Note | null | undefined): number {
+  protected prioritiseNote(note: Note | null | undefined): Relevance {
     if (!this.currentUrl || !note || !note.url) return 0;
     return calculateSimilarityScore(this.currentUrl, note.url);
   }
@@ -73,7 +73,7 @@ class NoteManagerBase extends LitElement {
 @customElement("note-manager-compact")
 export class NoteManagerCompact extends NoteManagerBase {
   private get hostNotes(): Note[] {
-    return this.notes.filter((note) => this.prioritiseNote(note) >= 1);
+    return this.notes.filter((note) => this.prioritiseNote(note) >= Relevance.SAME_HOST);
   }
 
   render() {
@@ -128,10 +128,10 @@ export class NoteManagerCompact extends NoteManagerBase {
 @customElement("note-manager")
 export class NoteManager extends NoteManagerBase {
   private get hostNotes(): Note[] {
-    return this.notes.filter((note) => this.prioritiseNote(note) >= 1);
+    return this.notes.filter((note) => this.prioritiseNote(note) >= Relevance.SAME_HOST);
   }
   private get otherNotes(): Note[] {
-    return this.notes.filter((note) => this.prioritiseNote(note) <= 0);
+    return this.notes.filter((note) => this.prioritiseNote(note) <= Relevance.NONE);
   }
 
   render() {
