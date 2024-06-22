@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "yarn tsc",
-    "postbuild": "yarn parcel build build/sidepanel.js build/background.js",
+    "postbuild": "yarn parcel build build/sidepanel.js build/background.js build/popup.js",
     "build-tests": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/**/*.test.js",
     "clear": "rm -rf build/ build-test/ dist/ extension/ extension.* .parcel-cache/",
     "prepackage": "yarn build",
