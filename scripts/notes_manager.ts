@@ -1,10 +1,16 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { Note } from "./model/note";
 import { Relevance, calculateSimilarityScore } from "./util";
 import "@material/web/button/filled-button";
 import "@material/web/divider/divider";
 import { DefaultStore } from "./model/note_backend";
+
+enum LoadingState {
+  LOADING,
+  LOADED,
+  ERROR_DOWNLOADING
+}
 
 function generateRandomId(): string {
   return Math.random().toString(36).substr(2, 9); // Generate a random string as an ID
@@ -19,6 +25,7 @@ async function getCurrentTab(): Promise<chrome.tabs.Tab> {
 
 class NoteManagerBase extends LitElement {
   @property({ type: String }) currentUrl: string | null = null;
+  @state() loadingState: LoadingState = LoadingState.LOADING;
 
   protected notes: Note[] = [];
 
@@ -50,6 +57,7 @@ class NoteManagerBase extends LitElement {
 
     const allNotes = await DefaultStore.getAllNotes();
     this.notes = allNotes.filter(note => !note.softDeleted);
+    this.loadingState = LoadingState.LOADED;
     this.requestUpdate();
   }
 
@@ -67,6 +75,17 @@ class NoteManagerBase extends LitElement {
     );
     this.notes.unshift(newNote);
     this.requestUpdate();
+  }
+
+  protected renderLoadingMessage() {
+    switch (this.loadingState) {
+      case LoadingState.LOADING:
+        return html`<i>Loading...</i>`;
+      case LoadingState.ERROR_DOWNLOADING:
+        return html`<i>Error</i>`;
+      default:
+        throw Error("Notes not rendered");
+    }
   }
 }
 
@@ -100,6 +119,9 @@ export class NoteManagerCompact extends NoteManagerBase {
   }
 
   render() {
+    if (this.loadingState !== LoadingState.LOADED)
+      return this.renderLoadingMessage();
+
     const notes = this.hostNotes;
     return html`
       <div>
@@ -144,6 +166,9 @@ export class NoteManager extends NoteManagerBase {
   }
 
   render() {
+    if (this.loadingState !== LoadingState.LOADED)
+      return this.renderLoadingMessage();
+
     return html`
       <div>
         <link rel="stylesheet" href="css/theme.css">
