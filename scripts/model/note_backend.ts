@@ -20,7 +20,7 @@ export interface NoteStore {
 }
 
 // Store that uploads and syncs notes.
-abstract class NoteStoreSync {
+export class NoteStoreSync {
   async getAllNotes(): Promise<Note[]> {
     console.log("Downloading from sync.");
     const notes = await Sync.downloadNotes();
@@ -35,7 +35,7 @@ abstract class NoteStoreSync {
     return notes;
   }
 
-  protected async persistAllNotes(notes: Note[]) {
+  async persistAllNotes(notes: Note[]) {
     console.log("Saving to sync.");
     const str = JSON.stringify(notes);
     console.log(`Saving ${str.length} bytes`);
@@ -43,7 +43,21 @@ abstract class NoteStoreSync {
   }
 }
 
-class NoteStoreImpl extends NoteStoreSync implements NoteStore {
+export class NoteStoreImpl implements NoteStore {
+  store: NoteStoreSync;
+
+  constructor(backend: NoteStoreSync | undefined = undefined) {
+    this.store = backend || new NoteStoreSync();
+  }
+
+  async getAllNotes(): Promise<Note[]> {
+    return this.store.getAllNotes();
+  }
+
+  private async persistAllNotes(notes: Note[]) {
+    return this.store.persistAllNotes(notes);
+  }
+
   async insert(note: Note): Promise<void> {
     const notes = await this.getAllNotes();
     const index = notes.findIndex((n: Note) => n.id === note.id);
