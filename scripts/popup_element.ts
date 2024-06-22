@@ -14,10 +14,11 @@ export class NoteManager extends LitElement {
 
   render() {
     return html`
-      <md-text-button @click="${this.openSidepanel}">
+      <md-filled-button @click="${this.openSidepanel}">
           Open sidepanel
-      </md-text-button>
-      <note-manager></note-manager>
+      </md-filled-button>
+      <md-divider></md-divider>
+      <note-manager-compact></note-manager-compact>
     `;
   }
 
@@ -30,6 +31,7 @@ export class NoteManager extends LitElement {
     :host {
       display: inline-block;
       width: 100%;
+      min-width: 240px;
       color: var(--md-sys-color-on-background);
       background: var(--md-sys-color-background);
     }
