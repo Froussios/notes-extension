@@ -49,6 +49,9 @@ export class Sync {
 
   static async getUserKey(): Promise<string> {
     const pui = await chrome.identity.getProfileUserInfo({ accountStatus: "ANY" });
+    const extensionChannel = chrome.runtime.getManifest().version_name;
+    if (extensionChannel)
+      return `${pui.id}-${extensionChannel}`;
     return pui.id;
   }
 
@@ -137,7 +140,7 @@ export class Sync {
     const response = await fetch(DOWNLOAD_URL);
 
     if (response.status == 404) {
-      console.info("The user does not have a cloud save.");
+      console.info("The user does not have a cloud save.", userid);
       return [];
     }
 
