@@ -1,11 +1,9 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { Note } from "./model/note";
-import { calculateSimilarityScore } from "./util";
 import "@material/web/button/filled-button";
 import "@material/web/divider/divider";
-import { DefaultStore } from "./model/note_backend";
 import "@material/web/button/text-button";
+import "@material/web/icon/icon";
 
 @customElement("note-popup")
 export class NoteManager extends LitElement {
@@ -14,8 +12,10 @@ export class NoteManager extends LitElement {
 
   render() {
     return html`
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <md-filled-button @click="${this.openSidepanel}">
-          Open sidepanel
+          View more notes
+          <i slot="icon" class="material-icons" translate="no">arrow_outward</i>
       </md-filled-button>
       <md-divider></md-divider>
       <note-manager-compact></note-manager-compact>
@@ -40,6 +40,15 @@ export class NoteManager extends LitElement {
     md-divider {
       margin: 4px 0 10px 0;
       width: 100%;
+    }
+
+    .material-icons {
+      font-size: 20px;
+    }
+
+    i {
+      width: 20px;
+      height: 20px;
     }
   `;
 }

@@ -6,6 +6,7 @@ export interface NoteLike {
   title: string;
   content: string;
   url: string;
+  _lastEdit: string;
   _softDeleted: string | undefined;
 }
 
@@ -14,7 +15,16 @@ export class Note implements NoteLike {
   title: string;
   content: string;
   url: string;
+  _lastEdit: string;
   _softDeleted: string | undefined;
+
+  get lastEdit(): Date {
+    return new Date(this._lastEdit);
+  }
+
+  private set lastEdit(date: Date) {
+    this._lastEdit = date.toISOString();
+  }
 
   get softDeleted(): Date | null {
     return this._softDeleted ? new Date(this._softDeleted) : null;
@@ -31,6 +41,8 @@ export class Note implements NoteLike {
     this.title = title || "";
     this.content = content || "";
     this.url = url || "";
+    this._lastEdit = ""; // Overwritten in the next LOC.
+    this.lastEdit = new Date();
 
     this.validate();
   }
@@ -55,8 +67,8 @@ export class Note implements NoteLike {
 
   // Save the note to localStorage
   async save() {
+    this.lastEdit = new Date();
     this.validate();
-
     this.Store.updateOrInsert(this);
   }
 

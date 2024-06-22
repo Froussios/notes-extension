@@ -73,27 +73,38 @@ class NoteManagerBase extends LitElement {
 @customElement("note-manager-compact")
 export class NoteManagerCompact extends NoteManagerBase {
   private get hostNotes(): Note[] {
-    return this.notes.filter((note) => this.prioritiseNote(note) >= Relevance.SAME_HOST);
+    const notes = this.notes.filter((note) => this.prioritiseNote(note) >= Relevance.SAME_HOST)
+      .sort((a, b) => a.lastEdit.getUTCMilliseconds() - b.lastEdit.getUTCMilliseconds());
+    if (notes.length > 0) return [notes[0]];
+    return [];
+  }
+
+  renderNote(note: Note) {
+    return html`<note-element
+      .note="${note}"
+      .isNewNote=${false}
+      .context=${this.currentUrl}
+    ></note-element>`;
+  }
+
+  renderNoNote() {
+    return html`
+      <md-divider></md-divider>
+      <span>
+        <md-filled-button @click="${this.createNote}">
+          Create Note
+        </md-filled-button>
+        <div class="context label-medium">for ${this.currentUrl}</div>
+      </span>
+    `;
   }
 
   render() {
+    const notes = this.hostNotes;
     return html`
       <div>
         <link rel="stylesheet" href="css/theme.css">
-        ${this.hostNotes.map((note) => html`
-            <note-element
-              .note="${note}"
-              .isNewNote=${false}
-              .context=${this.currentUrl}
-            ></note-element>
-            <md-divider></md-divider>
-          `
-    )}
-        <md-divider></md-divider>
-        <span>
-          <md-filled-button @click="${this.createNote}">Create Note</md-filled-button>
-          <div class="context label-medium">for ${this.currentUrl}</div>
-        </span>
+        ${notes.length > 0 ? this.renderNote(notes[0]) : this.renderNoNote()}
       </div>
     `;
   }
