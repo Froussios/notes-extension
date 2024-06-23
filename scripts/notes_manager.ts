@@ -40,7 +40,10 @@ class NoteManagerBase extends LitElement {
     this.loadingState = LoadingState.LOADED;
 
     getDefaultStore().noteUpdates.subscribe(allNotes => {
-      this.notes = allNotes.filter(note => !note.softDeleted);
+      this.notes = allNotes.filter(note =>
+        !note.softDeleted ||
+        (new Date().getTime() - note.softDeleted.getTime() < 30_000)
+      );
       this.requestUpdate();
     });
   }
