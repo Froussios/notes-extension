@@ -1,5 +1,4 @@
-import { getDefaultStore } from "./note_backend";
-import { Sync } from "./sync";
+import { NoteStore, NoteStoreImpl, NoteStoreWithBackground } from "./note_backend";
 
 export interface NoteLike {
   id: string;
@@ -34,7 +33,11 @@ export class Note implements NoteLike {
     this._softDeleted = date.toISOString();
   }
 
-  get Store() { return getDefaultStore(); }
+  private static _store: NoteStore;
+  get Store() {
+    Note._store = Note._store || new NoteStoreImpl(new NoteStoreWithBackground());
+    return Note._store;
+  }
 
   constructor(id: string, title: string, content: string, url: string) {
     this.id = id;

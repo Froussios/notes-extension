@@ -4,7 +4,7 @@ import { Note } from "./model/note";
 import { Relevance, calculateSimilarityScore } from "./util";
 import "@material/web/button/filled-button";
 import "@material/web/divider/divider";
-import { getDefaultStore } from "./model/note_backend";
+import { NoteStore, NoteStoreImpl, NoteStoreWithBackground } from "./model/note_backend";
 
 enum LoadingState {
   LOADING,
@@ -28,6 +28,7 @@ class NoteManagerBase extends LitElement {
   @state() loadingState: LoadingState = LoadingState.LOADING;
 
   protected notes: Note[] = [];
+  protected store: NoteStore = new NoteStoreImpl(new NoteStoreWithBackground());
 
   constructor() {
     super();
@@ -39,7 +40,7 @@ class NoteManagerBase extends LitElement {
 
     this.loadingState = LoadingState.LOADED;
 
-    getDefaultStore().noteUpdates.subscribe(allNotes => {
+    this.store.noteUpdates.subscribe(allNotes => {
       this.notes = allNotes.filter(note =>
         !note.softDeleted ||
         (new Date().getTime() - note.softDeleted.getTime() < 30_000)

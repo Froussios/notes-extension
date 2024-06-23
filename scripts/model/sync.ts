@@ -1,9 +1,8 @@
 import { Note, NoteLike } from "./note";
 
-// type EncryptedStr = {
-//   data: ArrayBuffer,
-//   iv: Uint8Array,
-// };
+const isWindowContext = typeof window !== 'undefined' && window.crypto !== undefined;
+// Access the crypto object based on context
+const crypto = isWindowContext ? window.crypto : self.crypto;
 
 type EncryptedStr = {
   data: string,
@@ -36,7 +35,7 @@ function decodeUint8Array(base64String: string): Uint8Array {
 
 export class Sync {
   static async generateEncryptionKey(): Promise<CryptoKey> {
-    return window.crypto.subtle.generateKey(
+    return crypto.subtle.generateKey(
       { name: "AES-GCM", length: 256 },
       true,
       ["encrypt", "decrypt"],
@@ -44,7 +43,7 @@ export class Sync {
   }
 
   static generateIV() {
-    return window.crypto.getRandomValues(new Uint8Array(12));
+    return crypto.getRandomValues(new Uint8Array(12));
   }
 
   static async getUserKey(): Promise<string> {
@@ -63,14 +62,14 @@ export class Sync {
       const key = await Sync.generateEncryptionKey();
 
       await chrome.storage.sync.set({
-        "encryption-key": await window.crypto.subtle.exportKey("jwk", key)
+        "encryption-key": await crypto.subtle.exportKey("jwk", key)
       });
 
       return key;
     }
     else {
       console.log("Local key found");
-      return await window.crypto.subtle.importKey(
+      return await crypto.subtle.importKey(
         "jwk",
         key_str,
         "AES-GCM",
@@ -85,7 +84,7 @@ export class Sync {
     const encodedStr = encoder.encode(str);
 
     iv = iv || Sync.generateIV();
-    const encrypted = await window.crypto.subtle.encrypt(
+    const encrypted = await crypto.subtle.encrypt(
       {
         name: "AES-GCM",
         iv: iv
@@ -103,7 +102,7 @@ export class Sync {
   static async decrypt(encrypted: EncryptedStr): Promise<string> {
     const key = await Sync.getEncryptionKey();
 
-    const decrypted = await window.crypto.subtle.decrypt(
+    const decrypted = await crypto.subtle.decrypt(
       {
         name: "AES-GCM",
         iv: decodeUint8Array(encrypted.iv)

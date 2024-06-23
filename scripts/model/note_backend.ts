@@ -74,6 +74,36 @@ export class NoteStoreWebSync implements NoteStorePushPull {
   }
 }
 
+// Delegates communication with an actual store to the background script.
+export class NoteStoreWithBackground implements NoteStorePushPull {
+  async pull(): Promise<Note[]> {
+    const notes = await chrome.runtime.sendMessage({
+      type: "pull"
+    });
+    if (!Array.isArray(notes)) throw new Error("Received non Note[]", notes);
+    return notes.map(Note.fromNoteLike);
+  }
+
+  async push(notes: Note[]) {
+    chrome.runtime.sendMessage({
+      type: "push",
+      notes: notes
+    });
+  }
+
+  receive(callback: receiveCallback): void {
+    chrome.runtime.onMessage.addListener((message, sender, respond) => {
+      console.log("Note backend received", message, sender);
+      if (message["type"] === "notesUpdate") {
+        const notes = message["notes"];
+        if (!Array.isArray(notes)) throw new Error("Received non Note[]", notes);
+        callback(notes.map(Note.fromNoteLike));
+      }
+      return true;
+    });
+  }
+}
+
 export class NoteStoreImpl implements NoteStore {
   store: NoteStorePushPull;
   notesBehaviour = new BehaviorSubject<Note[]>([]);
@@ -144,11 +174,4 @@ export class NoteStoreImpl implements NoteStore {
       .pipe(map((n: Note[]) => [...n]))
       .pipe(distinctUntilChanged(arraysEqual));
   }
-}
-
-let DefaultStore: NoteStoreImpl | undefined;
-export function getDefaultStore(): NoteStoreImpl {
-  if (!DefaultStore)
-    DefaultStore = new NoteStoreImpl(new NoteStoreWebSync());
-  return DefaultStore;
 }
