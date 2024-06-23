@@ -32,6 +32,17 @@ class NoteManagerBase extends LitElement {
   constructor() {
     super();
     this.notes = [];
+
+    this.refreshContext();
+    chrome.tabs.onActivated.addListener(() => this.refreshContext());
+    chrome.tabs.onUpdated.addListener(() => this.refreshContext());
+
+    this.loadingState = LoadingState.LOADED;
+
+    getDefaultStore().noteUpdates.subscribe(allNotes => {
+      this.notes = allNotes.filter(note => !note.softDeleted);
+      this.requestUpdate();
+    });
   }
 
   /** Show the active tab url. */
@@ -46,18 +57,6 @@ class NoteManagerBase extends LitElement {
         calculateSimilarityScore(n2.url, this.currentUrl || "") -
         calculateSimilarityScore(n1.url, this.currentUrl || "")
     );
-    this.requestUpdate();
-  }
-
-  async firstUpdated() {
-    this.refreshContext();
-
-    chrome.tabs.onActivated.addListener(() => this.refreshContext());
-    chrome.tabs.onUpdated.addListener(() => this.refreshContext());
-
-    const allNotes = await getDefaultStore().getAllNotes();
-    this.notes = allNotes.filter(note => !note.softDeleted);
-    this.loadingState = LoadingState.LOADED;
     this.requestUpdate();
   }
 
