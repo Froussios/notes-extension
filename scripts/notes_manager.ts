@@ -4,7 +4,7 @@ import { Note } from "./model/note";
 import { Relevance, calculateSimilarityScore } from "./util";
 import "@material/web/button/filled-button";
 import "@material/web/divider/divider";
-import { DefaultStore } from "./model/note_backend";
+import { getDefaultStore } from "./model/note_backend";
 
 enum LoadingState {
   LOADING,
@@ -55,7 +55,7 @@ class NoteManagerBase extends LitElement {
     chrome.tabs.onActivated.addListener(() => this.refreshContext());
     chrome.tabs.onUpdated.addListener(() => this.refreshContext());
 
-    const allNotes = await DefaultStore.getAllNotes();
+    const allNotes = await getDefaultStore().getAllNotes();
     this.notes = allNotes.filter(note => !note.softDeleted);
     this.loadingState = LoadingState.LOADED;
     this.requestUpdate();

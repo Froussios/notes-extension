@@ -1,5 +1,6 @@
 import { Note } from "./note";
 import { Sync } from "./sync";
+import { Observable, BehaviorSubject, distinctUntilChanged, map } from "rxjs";
 
 // Handles communication with a store. Does not do caching.
 export interface NoteStore {
@@ -17,6 +18,25 @@ export interface NoteStore {
 
   // Hard-deletes `note` from the store, as identified by the id.
   delete(note: Note): Promise<void>;
+
+  // Get the set of notes every time an update is pushed.
+  get noteUpdates(): Observable<Note[]>;
+}
+
+function arraysEqual<T>(a: Array<T>, b: Array<T>) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
 }
 
 // Store that uploads and syncs notes.
@@ -45,9 +65,13 @@ export class NoteStoreSync {
 
 export class NoteStoreImpl implements NoteStore {
   store: NoteStoreSync;
+  notesBehaviour = new BehaviorSubject<Note[]>([]);
 
   constructor(backend: NoteStoreSync | undefined = undefined) {
     this.store = backend || new NoteStoreSync();
+    this.store.getAllNotes().then(notes => {
+      this.notesBehaviour.next(notes);
+    });
   }
 
   async getAllNotes(): Promise<Note[]> {
@@ -55,7 +79,8 @@ export class NoteStoreImpl implements NoteStore {
   }
 
   private async persistAllNotes(notes: Note[]) {
-    return this.store.persistAllNotes(notes);
+    await this.store.persistAllNotes(notes);
+    this.notesBehaviour.next(notes);
   }
 
   async insert(note: Note): Promise<void> {
@@ -67,7 +92,7 @@ export class NoteStoreImpl implements NoteStore {
     else
       throw new Error(`Note ${note.id} already exists`);
 
-    this.persistAllNotes(notes);
+    await this.persistAllNotes(notes);
   }
 
   async update(note: Note): Promise<void> {
@@ -79,7 +104,7 @@ export class NoteStoreImpl implements NoteStore {
     else
       throw new Error(`Note ${note.id} does not exist to be updated. Insert it first.`);
 
-    this.persistAllNotes(notes);
+    await this.persistAllNotes(notes);
   }
 
   async updateOrInsert(note: Note): Promise<void> {
@@ -91,7 +116,7 @@ export class NoteStoreImpl implements NoteStore {
     else
       notes.push(note);
 
-    this.persistAllNotes(notes);
+    await this.persistAllNotes(notes);
   }
 
   async delete(note: Note): Promise<void> {
@@ -101,8 +126,19 @@ export class NoteStoreImpl implements NoteStore {
     if (index !== -1)
       notes.splice(index, 1);
 
-    this.persistAllNotes(notes);
+    await this.persistAllNotes(notes);
+  }
+
+  get noteUpdates(): Observable<Note[]> {
+    return this.notesBehaviour.asObservable()
+      .pipe(map((n: Note[]) => [...n]))
+      .pipe(distinctUntilChanged(arraysEqual));
   }
 }
 
-export const DefaultStore = new NoteStoreImpl();
+let DefaultStore: NoteStoreImpl | undefined;
+export function getDefaultStore(): NoteStoreImpl {
+  if (!DefaultStore)
+    DefaultStore = new NoteStoreImpl();
+  return DefaultStore;
+}
