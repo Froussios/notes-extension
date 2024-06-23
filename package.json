@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "prebuild": "yarn clear",
     "build": "yarn tsc",
     "postbuild": "yarn parcel build build/sidepanel.js build/background.js build/popup.js",
     "build-tests": "yarn tsc -p ./tsconfig.test.json && yarn parcel build --dist-dir build-test/dist/ build-test/js/**/*.test.js",
