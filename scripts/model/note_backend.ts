@@ -93,7 +93,6 @@ export class NoteStoreWithBackground implements NoteStorePushPull {
 
   receive(callback: receiveCallback): void {
     chrome.runtime.onMessage.addListener((message, sender, respond) => {
-      console.log("Note backend received", message, sender);
       if (message["type"] === "notesUpdate") {
         const notes = message["notes"];
         if (!Array.isArray(notes)) throw new Error("Received non Note[]", notes);
