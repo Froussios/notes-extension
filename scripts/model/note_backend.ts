@@ -39,9 +39,16 @@ function arraysEqual<T>(a: Array<T>, b: Array<T>) {
   return true;
 }
 
+type receiveCallback = (notes: Note[]) => void;
+export interface NoteStorePushPull {
+  pull(): Promise<Note[]>;
+  push(notes: Note[]): Promise<void>;
+  receive(callback: receiveCallback): void;
+}
+
 // Store that uploads and syncs notes.
-export class NoteStoreSync {
-  async getAllNotes(): Promise<Note[]> {
+export class NoteStoreWebSync implements NoteStorePushPull {
+  async pull(): Promise<Note[]> {
     console.log("Downloading from sync.");
     const notes = await Sync.downloadNotes();
     console.log("Downloaded", notes);
@@ -55,31 +62,34 @@ export class NoteStoreSync {
     return notes;
   }
 
-  async persistAllNotes(notes: Note[]) {
+  async push(notes: Note[]) {
     console.log("Saving to sync.");
     const str = JSON.stringify(notes);
     console.log(`Saving ${str.length} bytes`);
     await Sync.uploadNotes(notes);
   }
+
+  receive(callback: receiveCallback): void {
+    // Not supported.
+  }
 }
 
 export class NoteStoreImpl implements NoteStore {
-  store: NoteStoreSync;
+  store: NoteStorePushPull;
   notesBehaviour = new BehaviorSubject<Note[]>([]);
 
-  constructor(backend: NoteStoreSync | undefined = undefined) {
-    this.store = backend || new NoteStoreSync();
-    this.store.getAllNotes().then(notes => {
-      this.notesBehaviour.next(notes);
-    });
+  constructor(backend: NoteStorePushPull) {
+    this.store = backend;
+    this.store.pull().then(notes => this.notesBehaviour.next(notes));
+    this.store.receive(notes => this.notesBehaviour.next(notes));
   }
 
   async getAllNotes(): Promise<Note[]> {
-    return this.store.getAllNotes();
+    return this.store.pull();
   }
 
   private async persistAllNotes(notes: Note[]) {
-    await this.store.persistAllNotes(notes);
+    await this.store.push(notes);
     this.notesBehaviour.next(notes);
   }
 
@@ -139,6 +149,6 @@ export class NoteStoreImpl implements NoteStore {
 let DefaultStore: NoteStoreImpl | undefined;
 export function getDefaultStore(): NoteStoreImpl {
   if (!DefaultStore)
-    DefaultStore = new NoteStoreImpl();
+    DefaultStore = new NoteStoreImpl(new NoteStoreWebSync());
   return DefaultStore;
 }

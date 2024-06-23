@@ -1,16 +1,26 @@
 import { Note } from './note';
-import { NoteStoreSync, NoteStoreImpl } from "./note_backend";
+import { NoteStorePushPull, NoteStoreImpl } from "./note_backend";
 import { Observer, Subscription } from "rxjs";
 
-class FakeNoteStoreSync extends NoteStoreSync {
+class FakeNoteStoreSync implements NoteStorePushPull {
   notes: Note[] = [];
 
-  override async getAllNotes(): Promise<Note[]> {
+  async pull(): Promise<Note[]> {
     return this.notes;
   }
 
-  override async persistAllNotes(notes: Note[]) {
+  async push(notes: Note[]) {
     this.notes = notes;
+  }
+
+  callback: ((notes: Note[]) => void) | undefined;
+  receive(callback: (notes: Note[]) => void): void {
+    this.callback = callback;
+  }
+
+  runReceive(notes: Note[]) {
+    if (this.callback)
+      this.callback(notes);
   }
 }
 
@@ -46,8 +56,8 @@ describe("NoteStoreImpl", function () {
 
   beforeEach(() => {
     fake = new FakeNoteStoreSync();
-    spyOn(fake, "getAllNotes").and.callThrough();
-    spyOn(fake, "persistAllNotes").and.callThrough();
+    spyOn(fake, "pull").and.callThrough();
+    spyOn(fake, "push").and.callThrough();
     noteStore = new NoteStoreImpl(fake);
   });
 
@@ -55,7 +65,7 @@ describe("NoteStoreImpl", function () {
     const notes = await noteStore.getAllNotes();
 
     expect(notes).toEqual([]);
-    expect(fake.getAllNotes).toHaveBeenCalled();
+    expect(fake.pull).toHaveBeenCalled();
   });
 
   it('inserts notes', async () => {
@@ -63,11 +73,11 @@ describe("NoteStoreImpl", function () {
     const note2 = createNote();
     await noteStore.insert(note1);
 
-    expect(fake.persistAllNotes).toHaveBeenCalledWith([note1]);
+    expect(fake.push).toHaveBeenCalledWith([note1]);
 
     await noteStore.insert(note2);
 
-    expect(fake.persistAllNotes).toHaveBeenCalledWith([note1, note2]);
+    expect(fake.push).toHaveBeenCalledWith([note1, note2]);
 
     const notes = await noteStore.getAllNotes();
 
@@ -140,6 +150,18 @@ describe("NoteStoreImpl", function () {
       expect(observer.next).toHaveBeenCalledWith([note]);
       expect(observer.next).toHaveBeenCalledWith([noteUpdate]);
       expect(observer.next).toHaveBeenCalledTimes(3);
+      expect(observer.complete).not.toHaveBeenCalled();
+      expect(observer.error).not.toHaveBeenCalled();
+    });
+
+    it('emits update after receiving remote updates', async () => {
+      const note = createNote();
+
+      fake.runReceive([note]);
+
+      expect(observer.next).toHaveBeenCalledWith([]);
+      expect(observer.next).toHaveBeenCalledWith([note]);
+      expect(observer.next).toHaveBeenCalledTimes(2);
       expect(observer.complete).not.toHaveBeenCalled();
       expect(observer.error).not.toHaveBeenCalled();
     });
