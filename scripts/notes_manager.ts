@@ -1,10 +1,12 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined";
 import { Note } from "./model/note";
 import { Relevance, calculateSimilarityScore } from "./util";
 import "@material/web/button/filled-button";
 import "@material/web/divider/divider";
 import { NoteStore, NoteStoreImpl, NoteStoreWithBackground } from "./model/note_backend";
+import "./compact_url";
 
 enum LoadingState {
   LOADING,
@@ -116,7 +118,10 @@ export class NoteManagerCompact extends NoteManagerBase {
         <md-filled-button @click="${this.createNote}">
           Create Note
         </md-filled-button>
-        <div class="context label-medium">for ${this.currentUrl}</div>
+        <div class="context label-medium">
+          for
+          <compact-url url=${ifDefined(this.currentUrl)}></compact-url>
+        </div>
       </span>
     `;
   }
